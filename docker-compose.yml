@@ -1,0 +1,70 @@
+services:
+  # PostgreSQL database
+  labpro-ohl-db:
+    container_name: labpro-ohl-db
+    image: postgres:14
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports:
+      - '5434:${DB_PORT}' # Use port 5434 to avoid conflict with local PostgreSQL instance
+    volumes:
+      - ./db-data:/var/lib/postgresql/data
+    networks:
+      - labpro-ohl-network
+    healthcheck:
+      test:
+        [
+          'CMD-SHELL',
+          'pg_isready -U ${DB_USERNAME} -d ${DB_NAME} -h ${DB_HOST} -p ${DB_PORT}',
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Backend dev server
+  labpro-ohl-dev:
+    container_name: labpro-ohl-dev
+    build:
+      context: .
+      target: development
+    env_file:
+      - .env
+    ports:
+      - '3000:${APP_PORT}'
+    volumes:
+      - ./:/app
+    networks:
+      - labpro-ohl-network
+    depends_on:
+      labpro-ohl-db:
+        condition: service_healthy
+    command: npm run start:dev
+
+  # Backend prod server
+  labpro-ohl-prod:
+    container_name: labpro-ohl-prod
+    build:
+      context: .
+      target: production
+    env_file:
+      - .env
+    ports:
+      - '3000:${APP_PORT}'
+    networks:
+      - labpro-ohl-network
+    depends_on:
+      labpro-ohl-db:
+        condition: service_healthy
+    command: npm run start:prod
+
+volumes:
+  db-data:
+
+networks:
+  labpro-ohl-network:
+    external: true # Custom network
+    driver: bridge # Default bridge network

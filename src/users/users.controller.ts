@@ -1,4 +1,4 @@
-import { CommonUserDto } from './dto';
+import { CommonUserResponseDto, IncrementUserBalanceRequestDto } from './dto';
 import { Role } from './entities/user.entity';
 import { UsersService } from './users.service';
 import {
@@ -8,6 +8,9 @@ import {
   HttpCode,
   Query,
   UseGuards,
+  Post,
+  Body,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { Roles } from 'src/common/decorators';
@@ -26,7 +29,7 @@ export class UsersController {
     const users = await this.usersService.findAll(query);
 
     // Map users to CommonUserDto
-    const responseData = CommonUserDto.fromUsers(users);
+    const responseData = CommonUserResponseDto.fromUsers(users);
 
     return ResponseDto.success(
       'Successfully retrieced users data',
@@ -35,12 +38,13 @@ export class UsersController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
+  @HttpCode(200)
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
     // Get user by ID
     const user = await this.usersService.findOne(id);
 
     // Map user to CommonUserDto
-    const responseData = CommonUserDto.fromUser(user);
+    const responseData = CommonUserResponseDto.fromUser(user);
 
     return ResponseDto.success(
       'Successfully retrieved user data',
@@ -48,13 +52,20 @@ export class UsersController {
     );
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.usersService.update(+id, updateUserDto);
-  // }
+  @Post(':id/balance')
+  @HttpCode(201)
+  async incrementBalance(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: IncrementUserBalanceRequestDto,
+  ) {
+    const updatedUser = await this.usersService.incrementUserBalance(id, body);
 
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.usersService.remove(+id);
-  // }
+    // Map user to CommonUserDto
+    const responseData = CommonUserResponseDto.fromUser(updatedUser);
+
+    return ResponseDto.success(
+      'Successfully incremented user balance',
+      responseData,
+    );
+  }
 }

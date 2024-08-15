@@ -1,3 +1,4 @@
+import { IncrementUserBalanceRequestDto } from './dto';
 import { User } from './entities/user.entity';
 import {
   Injectable,
@@ -64,9 +65,38 @@ export class UsersService {
     return user;
   }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
+  async incrementUserBalance(id: string, body: IncrementUserBalanceRequestDto) {
+    // Get user id and validate entity
+    const userRepository = this.dataSource.getRepository(User);
+
+    let user: User | null = null;
+    try {
+      user = await userRepository.findOneBy({ id });
+    } catch (error) {
+      // Unexpected error
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to get user'),
+      );
+    }
+
+    if (!user) {
+      // Not found
+      throw new NotFoundException(ResponseDto.error('User not found'));
+    }
+
+    // Increment user
+    user.balance += body.increment;
+    try {
+      user = await userRepository.save(user);
+    } catch (error) {
+      // Unexpected error
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to increment user balance'),
+      );
+    }
+
+    return user;
+  }
 
   // remove(id: number) {
   //   return `This action removes a #${id} user`;

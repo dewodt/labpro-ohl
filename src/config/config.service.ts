@@ -1,6 +1,6 @@
 import { type Config } from './config.interface';
 import { Injectable } from '@nestjs/common';
-import { ConfigService as NestConfig, Path, PathValue } from '@nestjs/config';
+import { ConfigService, Path, PathValue } from '@nestjs/config';
 
 /**
  * @class ConfigService
@@ -9,7 +9,7 @@ import { ConfigService as NestConfig, Path, PathValue } from '@nestjs/config';
  * Automatically infer type in the get method.
  */
 @Injectable()
-export class ConfigService<T = Config> extends NestConfig<T> {
+export class CustomConfigService<T = Config> extends ConfigService<T> {
   /**
    * get method
    *

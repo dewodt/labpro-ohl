@@ -19,7 +19,7 @@ async function bootstrap() {
       process.env.APP_URL || 'http://localhost:3000',
       'https://labpro-fe.hmif.dev',
     ],
-    methods: 'GET,HEAD,PUT,PATCH,POST,OPTIONS',
+    methods: 'GET,DELETE,HEAD,PUT,PATCH,POST,OPTIONS',
     allowedHeaders: 'Origin, Content-Type, Authorization',
     exposedHeaders: 'Content-Length',
     credentials: true,

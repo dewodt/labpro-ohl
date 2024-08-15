@@ -11,6 +11,7 @@ import {
   Query,
   UseGuards,
   HttpCode,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
 import { JwtAuthGuard } from 'src/auth/guards';
@@ -48,8 +49,14 @@ export class FilmsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.filmsService.findOne(+id);
+  @HttpCode(200)
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+    const film = await this.filmsService.findOne(id);
+
+    // Map to response
+    const responseData = FilmDetailResponseDto.fromFilm(film);
+
+    return ResponseDto.success('Film retrieved successfully', responseData);
   }
 
   // @Patch(':id')

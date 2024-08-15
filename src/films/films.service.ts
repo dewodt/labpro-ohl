@@ -1,6 +1,10 @@
 import { CreateFilmRequestDto } from './dto/create-film.dto';
 import { Film } from './entities/film.entity';
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { UploadService } from 'src/common/cloudinary/upload.service';
 import { ResponseDto } from 'src/common/dto';
 import { DataSource, ILike } from 'typeorm';
@@ -92,14 +96,33 @@ export class FilmsService {
 
       return films;
     } catch (error) {
+      // Unexpected error
       throw new InternalServerErrorException(
         ResponseDto.error('Failed to get films'),
       );
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} film`;
+  async findOne(id: string): Promise<Film> {
+    // Get film
+    const filmRepository = this.dataSource.getRepository(Film);
+
+    let film: Film | null = null;
+    try {
+      film = await filmRepository.findOneBy({ id });
+    } catch (error) {
+      // Unexpected error
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to get film'),
+      );
+    }
+
+    // Not found
+    if (!film) {
+      throw new NotFoundException(ResponseDto.error('Film not found'));
+    }
+
+    return film;
   }
 
   // update(id: number, updateFilmDto: UpdateFilmDto) {

@@ -17,11 +17,11 @@ async function bootstrap() {
   app.enableCors({
     origin: [
       process.env.APP_URL || 'http://localhost:3000',
-      'https://labpro-fe.hmif.dev/',
+      'https://labpro-fe.hmif.dev',
     ],
     methods: 'GET,HEAD,PUT,PATCH,POST,OPTIONS',
-    // allowedHeaders: 'Origin, Content-Type, Authorization',
-    // exposedHeaders: 'Content-Length',
+    allowedHeaders: 'Origin, Content-Type, Authorization',
+    exposedHeaders: 'Content-Length',
     credentials: true,
     maxAge: 24 * 60 * 60,
   });

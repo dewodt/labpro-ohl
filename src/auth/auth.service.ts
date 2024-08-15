@@ -120,15 +120,14 @@ export class AuthService {
     const hashedPassword = await hash(body.password, 10);
 
     let insertedUser: User | null = null;
+    const newUser = userRepository.create({
+      email: body.email,
+      username: body.username,
+      name: body.name,
+      password: hashedPassword,
+    });
     try {
-      const insertResult = await userRepository.insert({
-        email: body.email,
-        username: body.username,
-        name: body.name,
-        password: hashedPassword,
-      });
-
-      insertedUser = insertResult.identifiers[0] as User;
+      insertedUser = await userRepository.save(newUser);
     } catch (error) {
       // Internal error
       throw new InternalServerErrorException(

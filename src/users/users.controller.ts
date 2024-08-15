@@ -11,6 +11,7 @@ import {
   Post,
   Body,
   ParseUUIDPipe,
+  Delete,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { Roles } from 'src/common/decorators';
@@ -58,7 +59,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() body: IncrementUserBalanceRequestDto,
   ) {
-    const updatedUser = await this.usersService.incrementUserBalance(id, body);
+    const updatedUser = await this.usersService.incrementBalance(id, body);
 
     // Map user to CommonUserDto
     const responseData = CommonUserResponseDto.fromUser(updatedUser);
@@ -67,5 +68,16 @@ export class UsersController {
       'Successfully incremented user balance',
       responseData,
     );
+  }
+
+  @Delete(':id')
+  @HttpCode(200)
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    const deletedUser = await this.usersService.remove(id);
+
+    // Map user to CommonUserDto
+    const responseData = CommonUserResponseDto.fromUser(deletedUser);
+
+    return ResponseDto.success('Successfully deleted user', responseData);
   }
 }

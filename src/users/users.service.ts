@@ -45,11 +45,7 @@ export class UsersService {
     let user: User | null = null;
 
     try {
-      user = await userRepository.findOne({
-        where: {
-          id,
-        },
-      });
+      user = await userRepository.findOneBy({ id });
     } catch (error) {
       // Unexpected error
       throw new InternalServerErrorException(
@@ -65,7 +61,10 @@ export class UsersService {
     return user;
   }
 
-  async incrementUserBalance(id: string, body: IncrementUserBalanceRequestDto) {
+  async incrementBalance(
+    id: string,
+    body: IncrementUserBalanceRequestDto,
+  ): Promise<User> {
     // Get user id and validate entity
     const userRepository = this.dataSource.getRepository(User);
 
@@ -98,7 +97,38 @@ export class UsersService {
     return user;
   }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
+  async remove(id: string): Promise<User> {
+    // Validate user id
+    const userRepository = this.dataSource.getRepository(User);
+
+    let user: User | null = null;
+    try {
+      user = await userRepository.findOneBy({ id });
+    } catch (error) {
+      // Unexpected error
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to get user'),
+      );
+    }
+
+    if (!user) {
+      // Not found
+      throw new NotFoundException(ResponseDto.error('User not found'));
+    }
+
+    // Remove user
+    try {
+      await userRepository.remove(user);
+    } catch (error) {
+      // Unexpected error
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to remove user'),
+      );
+    }
+
+    // https://github.com/typeorm/typeorm/issues/7024
+    user.id = id;
+
+    return user;
+  }
 }

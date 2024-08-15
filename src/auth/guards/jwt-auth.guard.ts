@@ -8,6 +8,7 @@ import {
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
+import { PUBLIC_KEY, ROLES_KEY } from 'src/common/decorators';
 import { ResponseDto } from 'src/common/dto';
 import { Role } from 'src/users/entities/user.entity';
 
@@ -20,9 +21,9 @@ export class JwtAuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     // Check if public
-    const isPublic = this.reflector.get<boolean>(
-      'isPublic',
-      context.getHandler(),
+    const isPublic = this.reflector.getAllAndOverride<boolean | undefined>(
+      PUBLIC_KEY,
+      [context.getHandler(), context.getClass()],
     );
     if (isPublic) {
       return true;
@@ -45,10 +46,10 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException(new ResponseDto('error', 'Unauthorized'));
     }
 
-    // Check allowed roles
-    const allowedRoles = this.reflector.get<Role[] | undefined>(
-      'roles',
-      context.getHandler(),
+    // Check allowed roles from handler + class
+    const allowedRoles = this.reflector.getAllAndOverride<Role[] | undefined>(
+      ROLES_KEY,
+      [context.getHandler(), context.getClass()],
     );
 
     // If decorator is set, check if user role is allowed

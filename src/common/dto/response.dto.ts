@@ -12,4 +12,18 @@ export class ResponseDto<T = any> {
     this.message = message;
     this.data = data;
   }
+
+  /**
+   * Create a success response
+   */
+  static success<T>(message: string, data: T): ResponseDto<T> {
+    return new ResponseDto<T>('success', message, data);
+  }
+
+  /**
+   * Create an error response
+   */
+  static error(message: string): ResponseDto {
+    return new ResponseDto('error', message);
+  }
 }

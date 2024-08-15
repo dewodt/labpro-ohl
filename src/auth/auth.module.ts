@@ -7,8 +7,10 @@ import { CustomConfigService } from 'src/config';
 
 @Module({
   imports: [
+    // Jwt utils
     JwtModule.registerAsync({
       inject: [CustomConfigService],
+      global: true, // Instance can be used globally (for guard)
       useFactory: (configService: CustomConfigService) => ({
         secret: configService.get('jwtSecret'),
       }),

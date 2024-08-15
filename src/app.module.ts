@@ -3,7 +3,11 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common';
 import { CustomValidationPipe } from './common/pipes';
-import { ConfigModule, CustomConfigService, loggerConfig } from './config';
+import {
+  CustomConfigModule,
+  CustomConfigService,
+  loggerConfig,
+} from './config';
 import { UsersModule } from './users/users.module';
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
@@ -14,7 +18,7 @@ import { LoggerErrorInterceptor, LoggerModule } from 'nestjs-pino';
   controllers: [AppController],
   imports: [
     // Global NestJS ConfigModule Wrapper,
-    ConfigModule,
+    CustomConfigModule,
     // Global common module
     CommonModule,
     // TypeORM
@@ -34,8 +38,8 @@ import { LoggerErrorInterceptor, LoggerModule } from 'nestjs-pino';
     // Logger (nestjs-pino) module
     LoggerModule.forRoot(loggerConfig),
     // Other modules
-    UsersModule,
     AuthModule,
+    UsersModule,
   ],
   providers: [
     // App service

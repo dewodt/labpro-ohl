@@ -1,3 +1,5 @@
 import { SetMetadata, CustomDecorator } from '@nestjs/common';
 
-export const Public = (): CustomDecorator => SetMetadata('isPublic', true);
+export const PUBLIC_KEY = 'isPublic';
+
+export const Public = (): CustomDecorator => SetMetadata(PUBLIC_KEY, true);

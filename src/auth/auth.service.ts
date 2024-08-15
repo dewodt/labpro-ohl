@@ -65,9 +65,16 @@ export class AuthService {
     };
 
     // Sign JWT
-    const token = await this.jwtService.signAsync(jwtPayload, {
-      expiresIn: '1d',
-    });
+    let token: string | null = null;
+    try {
+      token = await this.jwtService.signAsync(jwtPayload, {
+        expiresIn: '1d',
+      });
+    } catch (error) {
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to sign JWT'),
+      );
+    }
 
     return token;
   }

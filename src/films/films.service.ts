@@ -3,7 +3,7 @@ import { Film } from './entities/film.entity';
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { UploadService } from 'src/common/cloudinary/upload.service';
 import { ResponseDto } from 'src/common/dto';
-import { DataSource } from 'typeorm';
+import { DataSource, ILike } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -70,8 +70,32 @@ export class FilmsService {
     }
   }
 
-  findAll() {
-    return `This action returns all films`;
+  async findAll(titleOrDirectorQuery: string | undefined): Promise<Film[]> {
+    // Get all films
+    const filmRepository = this.dataSource.getRepository(Film);
+
+    try {
+      const films = await filmRepository.find(
+        titleOrDirectorQuery
+          ? {
+              where: [
+                {
+                  title: ILike(`%${titleOrDirectorQuery}%`),
+                },
+                {
+                  director: ILike(`%${titleOrDirectorQuery}%`),
+                },
+              ],
+            }
+          : undefined,
+      );
+
+      return films;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to get films'),
+      );
+    }
   }
 
   findOne(id: number) {

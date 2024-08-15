@@ -12,7 +12,7 @@ import { DataSource, ILike } from 'typeorm';
 export class UsersService {
   constructor(private dataSource: DataSource) {}
 
-  async findAll(queryUsername: string): Promise<User[]> {
+  async findAll(queryUsername: string | undefined): Promise<User[]> {
     // Get all users with the username
     const userRepository = this.dataSource.getRepository(User);
 

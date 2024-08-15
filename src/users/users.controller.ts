@@ -25,7 +25,7 @@ export class UsersController {
 
   @Get()
   @HttpCode(200)
-  async findAll(@Query('q') query: string) {
+  async findAll(@Query('q') query: string | undefined) {
     // Get all users
     const users = await this.usersService.findAll(query);
 

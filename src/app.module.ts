@@ -8,10 +8,12 @@ import {
   CustomConfigService,
   loggerConfig,
 } from './config';
+import { FilmsModule } from './films/films.module';
 import { UsersModule } from './users/users.module';
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
 import { LoggerErrorInterceptor, LoggerModule } from 'nestjs-pino';
 
 @Module({
@@ -21,6 +23,11 @@ import { LoggerErrorInterceptor, LoggerModule } from 'nestjs-pino';
     CustomConfigModule,
     // Global common module
     CommonModule,
+    // Formdata Parser module
+    NestjsFormDataModule.config({
+      isGlobal: true,
+      storage: MemoryStoredFile,
+    }),
     // TypeORM
     TypeOrmModule.forRootAsync({
       inject: [CustomConfigService],
@@ -40,6 +47,7 @@ import { LoggerErrorInterceptor, LoggerModule } from 'nestjs-pino';
     // Other modules
     AuthModule,
     UsersModule,
+    FilmsModule,
   ],
   providers: [
     // App service

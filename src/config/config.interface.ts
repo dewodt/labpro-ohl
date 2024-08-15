@@ -18,4 +18,10 @@ export interface Config {
     password: string;
     database: string;
   };
+  cloudinary: {
+    cloudName: string;
+    apiKey: string;
+    apiSecret: string;
+    folder: string;
+  };
 }

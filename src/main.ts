@@ -13,6 +13,19 @@ async function bootstrap() {
   // Logger using nestjs-pino
   app.useLogger(app.get(Logger));
 
+  // Cors
+  app.enableCors({
+    origin: [
+      process.env.APP_URL || 'http://localhost:3000',
+      'https://labpro-fe.hmif.dev/',
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,OPTIONS',
+    // allowedHeaders: 'Origin, Content-Type, Authorization',
+    // exposedHeaders: 'Content-Length',
+    credentials: true,
+    maxAge: 24 * 60 * 60,
+  });
+
   // Setup template engine and static files
   app.useStaticAssets(join(__dirname, '..', 'public'));
   app.setBaseViewsDir(join(__dirname, '..', 'views'));

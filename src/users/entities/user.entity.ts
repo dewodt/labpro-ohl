@@ -25,11 +25,8 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ name: 'first_name' })
-  firstName: string;
-
-  @Column({ name: 'last_name', type: 'varchar', length: 255, nullable: true })
-  lastName: string | null;
+  @Column()
+  name: string;
 
   @Column({ default: 0 })
   balance: number;
@@ -39,4 +36,7 @@ export class User {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
+  role: Role;
 }

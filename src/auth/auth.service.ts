@@ -74,7 +74,7 @@ export class AuthService {
 
   async login(body: LoginRequestDto) {
     // Validate user
-    const user = await this.validateUser(body.emailOrUsername, body.password);
+    const user = await this.validateUser(body.username, body.password);
 
     // Check if user exists
     if (!user) {

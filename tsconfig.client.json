@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "es6",
+    "outDir": "./public/scripts",
+    "rootDir": "./assets/scripts",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["dom", "es6"]
+  },
+  "include": ["assets/scripts/**/*"],
+  "exclude": ["node_modules", "src"]
+}

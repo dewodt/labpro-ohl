@@ -2,7 +2,7 @@ import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Logger } from 'nestjs-pino';
-import { join } from 'path';
+import { resolve } from 'path';
 
 async function bootstrap() {
   // Create nest app
@@ -27,8 +27,8 @@ async function bootstrap() {
   });
 
   // Setup template engine and static files
-  app.useStaticAssets(join(__dirname, '..', 'public'));
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.useStaticAssets(resolve('./public'));
+  app.setBaseViewsDir(resolve('./views'));
   app.setViewEngine('hbs');
 
   // Listen to request

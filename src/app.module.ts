@@ -1,5 +1,3 @@
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BucketModule } from './bucket/bucket.module';
 import { CommonModule } from './common';
@@ -11,6 +9,7 @@ import {
 } from './config';
 import { FilmsModule } from './films/films.module';
 import { UsersModule } from './users/users.module';
+import { WebModule } from './web/web.module';
 import { Module } from '@nestjs/common';
 import { APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,7 +17,6 @@ import { MemoryStoredFile, NestjsFormDataModule } from 'nestjs-form-data';
 import { LoggerErrorInterceptor, LoggerModule } from 'nestjs-pino';
 
 @Module({
-  controllers: [AppController],
   imports: [
     // Global NestJS ConfigModule Wrapper,
     CustomConfigModule,
@@ -47,14 +45,14 @@ import { LoggerErrorInterceptor, LoggerModule } from 'nestjs-pino';
     BucketModule,
     // Logger (nestjs-pino) module
     LoggerModule.forRoot(loggerConfig),
+    // Web Hbs (Template) module
+    WebModule,
     // Other modules
     AuthModule,
     UsersModule,
     FilmsModule,
   ],
   providers: [
-    // App service
-    AppService,
     // Global custom validation pipe (for custom dto response)
     {
       provide: APP_PIPE,

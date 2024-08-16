@@ -1,0 +1,71 @@
+<html>
+  <head>
+    <title>Login | Labpro OHL</title>
+    <meta
+      name='description'
+      content='Tugas Seleksi 3 Asisten Laboratorium Programming 2024 ITB'
+    />
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+    <link rel='stylesheet' href='/styles/tailwind.css' />
+    <script src='/scripts/login.js' defer></script>
+  </head>
+  <body class='flex min-h-screen'>
+    <main
+      class='flex flex-auto items-center justify-center bg-muted px-4 py-12 lg:p-24'
+    >
+      <div
+        class='w-full max-w-sm space-y-3 rounded-lg border bg-card p-6 text-card-foreground shadow-lg'
+      >
+        <h1 class='text-center text-2xl font-bold'>
+          Login
+        </h1>
+
+        <form id='login-form' class='space-y-6'>
+          {{! Username }}
+          <div class='space-y-2'>
+            <label
+              for='username'
+              class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+            >
+              Email
+            </label>
+            <input
+              id='username'
+              name='username'
+              type='text'
+              placeholder='Enter your username'
+              class='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+            />
+          </div>
+
+          {{! Password }}
+          <div class='space-y-2'>
+            <label
+              for='password'
+              class='text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70'
+            >
+              Password
+            </label>
+            <input
+              id='password'
+              name='password'
+              type='password'
+              placeholder='Enter your password'
+              class='flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+            />
+          </div>
+
+          {{! Submit button }}
+          <button
+            id='login-button'
+            type='submit'
+            class='inline-flex h-10 w-full items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+          >
+            Login
+          </button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

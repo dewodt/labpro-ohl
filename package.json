@@ -20,7 +20,10 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky",
-    "build:css": "tailwindcss -i styles/tailwind.css -o public/styles/tailwind.css --minify",
+    "build:client:prod": "tsc --project tsconfig.client.json",
+    "build:client:dev": "tsc --project tsconfig.client.json --watch",
+    "build:tailwind:prod": "tailwindcss -i assets/styles/tailwind.css -o public/styles/tailwind.css --minify",
+    "build:tailwind:dev": "tailwindcss -i assets/styles/tailwind.css -o public/styles/tailwind.css --watch",
     "seed": "node dist/seeder"
   },
   "dependencies": {
@@ -54,6 +57,7 @@
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.17",
+    "@types/hbs": "^4.0.4",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.3.1",
     "@types/supertest": "^6.0.0",

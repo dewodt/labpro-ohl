@@ -333,18 +333,18 @@ export class FilmsService {
     }
   }
 
-  async getPurchases(userId: string): Promise<Film[]> {
+  async getPurchases(userId: string): Promise<FilmTransaction[]> {
     // Get all films bought by userID
-    const filmRepository = this.dataSource.getRepository(Film);
+    const filmTransactionRepository =
+      this.dataSource.getRepository(FilmTransaction);
 
     try {
-      const films = await filmRepository
-        .createQueryBuilder('films')
-        .innerJoinAndSelect('films.filmTransactions', 'filmTransactions')
-        .where('filmTransactions.user_id = :userId', { userId })
-        .getMany();
+      const filmTransactions = await filmTransactionRepository.find({
+        where: { user: { id: userId } },
+        relations: ['film'],
+      });
 
-      return films;
+      return filmTransactions;
     } catch (error) {
       // Unexpected error
       throw new InternalServerErrorException(

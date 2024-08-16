@@ -1,6 +1,7 @@
 import { FilmDetailResponseDto, FilmOverviewResponseDto } from './dto';
 import { BuyFilmResponseDto } from './dto/buy-film-dto';
 import { CreateFilmRequestDto } from './dto/create-film.dto';
+import { FilmPurchasesResponseDto } from './dto/film-purchases.dto';
 import { UpdateFilmRequestDto } from './dto/update-film.dto';
 import { FilmsService } from './films.service';
 import {
@@ -55,11 +56,11 @@ export class FilmsController {
   @Get('purchases')
   @HttpCode(200)
   async getPurchases(@ReqUser() user: UserPayload) {
-    console.log(user.id);
-    const films = await this.filmsService.getPurchases(user.id);
+    const filmTransactions = await this.filmsService.getPurchases(user.id);
 
     // Map to response
-    const responseData = FilmOverviewResponseDto.fromFilms(films);
+    const responseData =
+      FilmPurchasesResponseDto.fromFilmTransactions(filmTransactions);
 
     return ResponseDto.success(
       'Purchased films retrieved successfully',

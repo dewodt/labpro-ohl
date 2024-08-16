@@ -16,11 +16,17 @@ export class FilmTransaction {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Film, (film) => film.filmTransactions)
+  // When a film is deleted, all of its film_id in transactions are set to null (not deleted, to show that the film is no longer available)
+  @ManyToOne(() => Film, (film) => film.filmTransactions, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'film_id' })
-  film: Film;
+  film: Film | null;
 
-  @ManyToOne(() => User, (user) => user.filmTransactions)
+  // When a user is deleted, all of their transactions are deleted as well
+  @ManyToOne(() => User, (user) => user.filmTransactions, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
 

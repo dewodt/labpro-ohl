@@ -1,5 +1,6 @@
 import { FilmDetailResponseDto, FilmOverviewResponseDto } from './dto';
 import { CreateFilmRequestDto } from './dto/create-film.dto';
+import { UpdateFilmRequestDto } from './dto/update-film.dto';
 import { FilmsService } from './films.service';
 import {
   Controller,
@@ -12,6 +13,7 @@ import {
   UseGuards,
   HttpCode,
   ParseUUIDPipe,
+  Put,
 } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
 import { JwtAuthGuard } from 'src/auth/guards';
@@ -59,12 +61,25 @@ export class FilmsController {
     return ResponseDto.success('Film retrieved successfully', responseData);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateFilmDto: UpdateFilmDto) {
-  //   return this.filmsService.update(+id, updateFilmDto);
-  // }
+  @Put(':id')
+  @Roles(Role.ADMIN)
+  @FormDataRequest()
+  @HttpCode(200)
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: UpdateFilmRequestDto,
+  ) {
+    // Update the film
+    const updatedFilm = await this.filmsService.update(id, body);
+
+    // Map to response
+    const responseData = FilmDetailResponseDto.fromFilm(updatedFilm);
+
+    return ResponseDto.success('Film updated successfully', responseData);
+  }
 
   @Delete(':id')
+  @Roles(Role.ADMIN)
   @HttpCode(200)
   async remove(@Param('id', ParseUUIDPipe) id: string) {
     const removedFilm = await this.filmsService.remove(id);

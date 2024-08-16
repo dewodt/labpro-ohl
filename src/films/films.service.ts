@@ -1,4 +1,4 @@
-import { CreateFilmRequestDto } from './dto/create-film.dto';
+import { CreateFilmRequestDto, UpdateFilmRequestDto } from './dto';
 import { Film } from './entities/film.entity';
 import {
   Injectable,
@@ -125,9 +125,78 @@ export class FilmsService {
     return film;
   }
 
-  // update(id: number, updateFilmDto: UpdateFilmDto) {
-  //   return `This action updates a #${id} film`;
-  // }
+  async update(id: string, body: UpdateFilmRequestDto): Promise<Film> {
+    // Validate film id
+    const filmRepository = this.dataSource.getRepository(Film);
+
+    let film: Film | null = null;
+    try {
+      film = await filmRepository.findOneBy({ id });
+    } catch (error) {
+      // Unexpected error
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to get film'),
+      );
+    }
+
+    // Not found
+    if (!film) {
+      throw new NotFoundException(ResponseDto.error('Film not found'));
+    }
+
+    // Handle new video upload
+    let newVideoUrl: string | undefined = undefined;
+    if (body.video) {
+      try {
+        newVideoUrl = await this.bucketService.upload(body.video, {
+          public_id: `videos/${id}`, // File name on Cloudinary, override the old one
+          resource_type: 'video', // The type of file to upload
+        });
+      } catch (error) {
+        throw new InternalServerErrorException(
+          ResponseDto.error('Failed to upload video'),
+        );
+      }
+    }
+
+    // Handle new cover image upload
+    let newCoverImageUrl: string | undefined = undefined;
+    if (body.cover_image) {
+      try {
+        newCoverImageUrl = await this.bucketService.upload(body.cover_image, {
+          public_id: `cover-images/${id}`, // File name on Cloudinary, override the old one
+          resource_type: 'image', // The type of file to upload
+        });
+      } catch (error) {
+        throw new InternalServerErrorException(
+          ResponseDto.error('Failed to upload cover image'),
+        );
+      }
+    }
+
+    // Update film
+    try {
+      const updatedFilm = await filmRepository.save({
+        id,
+        title: body.title,
+        description: body.description,
+        director: body.director,
+        releaseYear: body.release_year,
+        genre: body.genre,
+        price: body.price,
+        duration: body.duration,
+        videoUrl: newVideoUrl,
+        coverImageUrl: newCoverImageUrl,
+      });
+
+      return updatedFilm;
+    } catch (error) {
+      // Unexpected error
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to update film'),
+      );
+    }
+  }
 
   async remove(id: string): Promise<Film> {
     // Validate user id

@@ -1,4 +1,5 @@
 import { FilmDetailResponseDto, FilmOverviewResponseDto } from './dto';
+import { BuyFilmResponseDto } from './dto/buy-film-dto';
 import { CreateFilmRequestDto } from './dto/create-film.dto';
 import { UpdateFilmRequestDto } from './dto/update-film.dto';
 import { FilmsService } from './films.service';
@@ -16,8 +17,9 @@ import {
   Put,
 } from '@nestjs/common';
 import { FormDataRequest } from 'nestjs-form-data';
+import { UserPayload } from 'src/auth/auth.interface';
 import { JwtAuthGuard } from 'src/auth/guards';
-import { Roles } from 'src/common/decorators';
+import { ReqUser, Roles } from 'src/common/decorators';
 import { ResponseDto } from 'src/common/dto';
 import { Role } from 'src/users/entities';
 
@@ -88,5 +90,24 @@ export class FilmsController {
     const responseData = FilmDetailResponseDto.fromFilm(removedFilm);
 
     return ResponseDto.success('Film deleted successfully', responseData);
+  }
+
+  @Post(':id/buy')
+  @HttpCode(200)
+  async buy(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ReqUser() user: UserPayload,
+  ) {
+    // Buy the film
+    const [updatedUser, boughtFilm] = await this.filmsService.buy(id, user.id);
+
+    // Map to response
+    const responseData = BuyFilmResponseDto.fromUserAndFilm(
+      updatedUser,
+      boughtFilm,
+    );
+
+    // Return the response
+    return ResponseDto.success('Film bought successfully', responseData);
   }
 }

@@ -1,7 +1,9 @@
+import { FilmTransaction } from './film-transaction.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -36,6 +38,9 @@ export class Film {
 
   @Column({ name: 'cover_image_url', type: 'varchar', nullable: true })
   coverImageUrl: string | null;
+
+  @OneToMany(() => FilmTransaction, (filmTransaction) => filmTransaction.film)
+  filmTransactions: FilmTransaction[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

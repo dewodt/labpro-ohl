@@ -10,6 +10,9 @@ run-app-dev:
 run-app-prod:
 	docker compose up --build labpro-ohl-prod
 
+run-seeder:
+	docker compose up --build labpro-ohl-seeder
+
 reset:
 	docker compose down -v
 	sudo rm -rf ./db-data

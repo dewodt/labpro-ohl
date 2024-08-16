@@ -230,19 +230,24 @@ export class FilmsService {
       );
     }
 
-    // Ignore transactional error, proceed to delete blob data
-    // No way to rollback file upload if one of them failed
-    // Delete blob data to reduce storage usage
-    try {
-      await this.bucketService.delete(`videos/${id}`);
-      if (film.coverImageUrl) {
-        await this.bucketService.delete(`cover-images/${id}`);
-      }
-    } catch (error) {
-      throw new InternalServerErrorException(
-        ResponseDto.error('Failed to delete film and coverimage data'),
-      );
-    }
+    // NOTE:
+    // To ease db seeding, we will not delete the video and cover_image
+    // because some of the image will be reused for serveral films in the seeding
+    // (to reduce storage usage +  to make the seeding process faster (uploading image/video is very slow))
+
+    // // Ignore transactional error, proceed to delete blob data
+    // // No way to rollback file upload if one of them failed
+    // // Delete blob data to reduce storage usage
+    // try {
+    //   await this.bucketService.delete(`videos/${id}`);
+    //   if (film.coverImageUrl) {
+    //     await this.bucketService.delete(`cover-images/${id}`);
+    //   }
+    // } catch (error) {
+    //   throw new InternalServerErrorException(
+    //     ResponseDto.error('Failed to delete film and coverimage data'),
+    //   );
+    // }
 
     // https://github.com/typeorm/typeorm/issues/7024
     film.id = id;

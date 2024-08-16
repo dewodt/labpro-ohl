@@ -25,7 +25,7 @@ services:
       timeout: 3s
       retries: 5
 
-  # Backend dev server
+  # dev server
   labpro-ohl-dev:
     container_name: labpro-ohl-dev
     build:
@@ -44,7 +44,7 @@ services:
         condition: service_healthy
     command: npm run start:dev
 
-  # Backend prod server
+  # prod server
   labpro-ohl-prod:
     container_name: labpro-ohl-prod
     build:
@@ -60,6 +60,21 @@ services:
       labpro-ohl-db:
         condition: service_healthy
     command: npm run start:prod
+
+  # Seeder
+  labpro-ohl-seeder:
+    container_name: labpro-ohl-seeder
+    build:
+      context: .
+      target: production
+    env_file:
+      - .env
+    networks:
+      - labpro-ohl-network
+    depends_on:
+      labpro-ohl-db:
+        condition: service_healthy
+    command: npm run seed
 
 volumes:
   db-data:

@@ -1,10 +1,10 @@
-import { UploadService } from './cloudinary/upload.service';
+import { BucketService } from './cloudinary/bucket.service';
 import { CustomValidationPipe } from './pipes';
 import { Global, Module } from '@nestjs/common';
 
 @Global()
 @Module({
-  providers: [CustomValidationPipe, UploadService],
-  exports: [CustomValidationPipe, UploadService],
+  providers: [CustomValidationPipe, BucketService],
+  exports: [CustomValidationPipe, BucketService],
 })
 export class CommonModule {}

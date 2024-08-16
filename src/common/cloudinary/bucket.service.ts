@@ -1,10 +1,21 @@
 import { Injectable } from '@nestjs/common';
-import { type UploadApiOptions, v2 as cloudinary } from 'cloudinary';
+import {
+  type DeliveryType,
+  type ResourceType,
+  type UploadApiOptions,
+  v2 as cloudinary,
+} from 'cloudinary';
 import { MemoryStoredFile } from 'nestjs-form-data';
 import { CustomConfigService } from 'src/config';
 
+interface DeleteOption {
+  resource_type?: ResourceType;
+  type?: DeliveryType;
+  invalidate?: boolean;
+}
+
 @Injectable()
-export class UploadService {
+export class BucketService {
   constructor(private readonly configService: CustomConfigService) {
     // Setup config
     cloudinary.config({
@@ -39,6 +50,15 @@ export class UploadService {
       });
 
       return (result as any).secure_url;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async delete(publicId: string, options: DeleteOption = {}): Promise<void> {
+    try {
+      await cloudinary.uploader.destroy(publicId, options);
     } catch (error) {
       console.log(error);
       throw error;

@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { UploadService } from 'src/common/cloudinary/upload.service';
+import { BucketService } from 'src/common/cloudinary/bucket.service';
 import { ResponseDto } from 'src/common/dto';
 import { DataSource, ILike } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,7 +14,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class FilmsService {
   constructor(
     private readonly dataSource: DataSource,
-    private readonly uploadService: UploadService,
+    private readonly bucketService: BucketService,
   ) {}
 
   async create(body: CreateFilmRequestDto): Promise<Film> {
@@ -24,7 +24,7 @@ export class FilmsService {
     // Upload the video
     let videoUrl: string | undefined = undefined;
     try {
-      videoUrl = await this.uploadService.upload(body.video, {
+      videoUrl = await this.bucketService.upload(body.video, {
         public_id: `videos/${newFilmID}`, // File name on Cloudinary
         resource_type: 'video', // The type of file to upload
       });
@@ -38,7 +38,7 @@ export class FilmsService {
     let coverImageUrl: string | undefined = undefined;
     if (body.cover_image) {
       try {
-        coverImageUrl = await this.uploadService.upload(body.cover_image, {
+        coverImageUrl = await this.bucketService.upload(body.cover_image, {
           public_id: `cover-images/${newFilmID}`, // File name on Cloudinary
           resource_type: 'image', // The type of file to upload
         });
@@ -129,7 +129,52 @@ export class FilmsService {
   //   return `This action updates a #${id} film`;
   // }
 
-  remove(id: number) {
-    return `This action removes a #${id} film`;
+  async remove(id: string): Promise<Film> {
+    // Validate user id
+    const filmRepository = this.dataSource.getRepository(Film);
+
+    let film: Film | null = null;
+    try {
+      film = await filmRepository.findOneBy({ id });
+    } catch (error) {
+      // Unexpected error
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to get film'),
+      );
+    }
+
+    // Not found
+    if (!film) {
+      throw new NotFoundException(ResponseDto.error('Film not found'));
+    }
+
+    // Remove film
+    try {
+      await filmRepository.remove(film);
+    } catch (error) {
+      // Unexpected error
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to remove film'),
+      );
+    }
+
+    // Ignore transactional error, proceed to delete blob data
+    // No way to rollback file upload if one of them failed
+    // Delete blob data to reduce storage usage
+    try {
+      await this.bucketService.delete(`videos/${id}`);
+      if (film.coverImageUrl) {
+        await this.bucketService.delete(`cover-images/${id}`);
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to delete film and coverimage data'),
+      );
+    }
+
+    // https://github.com/typeorm/typeorm/issues/7024
+    film.id = id;
+
+    return film;
   }
 }

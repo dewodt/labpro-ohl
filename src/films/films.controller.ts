@@ -65,7 +65,13 @@ export class FilmsController {
   // }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.filmsService.remove(+id);
+  @HttpCode(200)
+  async remove(@Param('id', ParseUUIDPipe) id: string) {
+    const removedFilm = await this.filmsService.remove(id);
+
+    // Map to response
+    const responseData = FilmDetailResponseDto.fromFilm(removedFilm);
+
+    return ResponseDto.success('Film deleted successfully', responseData);
   }
 }

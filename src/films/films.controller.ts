@@ -52,6 +52,21 @@ export class FilmsController {
     return ResponseDto.success('Films retrieved successfully"', responseData);
   }
 
+  @Get('purchases')
+  @HttpCode(200)
+  async getPurchases(@ReqUser() user: UserPayload) {
+    console.log(user.id);
+    const films = await this.filmsService.getPurchases(user.id);
+
+    // Map to response
+    const responseData = FilmOverviewResponseDto.fromFilms(films);
+
+    return ResponseDto.success(
+      'Purchased films retrieved successfully',
+      responseData,
+    );
+  }
+
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {

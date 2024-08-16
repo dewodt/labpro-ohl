@@ -332,4 +332,24 @@ export class FilmsService {
       }
     }
   }
+
+  async getPurchases(userId: string): Promise<Film[]> {
+    // Get all films bought by userID
+    const filmRepository = this.dataSource.getRepository(Film);
+
+    try {
+      const films = await filmRepository
+        .createQueryBuilder('films')
+        .innerJoinAndSelect('films.filmTransactions', 'filmTransactions')
+        .where('filmTransactions.user_id = :userId', { userId })
+        .getMany();
+
+      return films;
+    } catch (error) {
+      // Unexpected error
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to get films'),
+      );
+    }
+  }
 }

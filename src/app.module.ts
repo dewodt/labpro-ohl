@@ -1,6 +1,7 @@
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { BucketModule } from './bucket/bucket.module';
 import { CommonModule } from './common';
 import { CustomValidationPipe } from './common/pipes';
 import {
@@ -28,7 +29,7 @@ import { LoggerErrorInterceptor, LoggerModule } from 'nestjs-pino';
       isGlobal: true,
       storage: MemoryStoredFile,
     }),
-    // TypeORM
+    // TypeORM (DB) Moduke
     TypeOrmModule.forRootAsync({
       inject: [CustomConfigService],
       useFactory: async (configService: CustomConfigService) => ({
@@ -42,6 +43,8 @@ import { LoggerErrorInterceptor, LoggerModule } from 'nestjs-pino';
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
       }),
     }),
+    // Cloudinary (Bucket) Module
+    BucketModule,
     // Logger (nestjs-pino) module
     LoggerModule.forRoot(loggerConfig),
     // Other modules

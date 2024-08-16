@@ -7,7 +7,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { BucketService } from 'src/common/cloudinary/bucket.service';
+import { BucketService } from 'src/bucket/bucket.service';
 import { ResponseDto } from 'src/common/dto';
 import { User } from 'src/users/entities';
 import { DataSource, ILike, QueryFailedError } from 'typeorm';

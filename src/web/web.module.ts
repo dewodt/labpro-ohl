@@ -1,4 +1,4 @@
-import { WebController } from './web.controller';
+import { WebMoviesController, WebAuthController } from './controllers';
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import {
   AuthenticatedOnlyMiddleware,
@@ -8,16 +8,22 @@ import { FilmsModule } from 'src/films/films.module';
 
 @Module({
   imports: [FilmsModule],
-  controllers: [WebController],
+  controllers: [WebAuthController, WebMoviesController],
 })
 export class WebModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    // If not authenticated, redirect to login
-    consumer.apply(AuthenticatedOnlyMiddleware).forRoutes('/dashboard/*');
+    // Cannot use guards, since guards throws Http exception (not redirect)
 
-    // If authenticated, redirect to dashboard
+    // Non Auth Access Only
+    // If user is authenticated and tries to access these routes, redirect to /my-movies
     consumer
       .apply(NonAuthenticatedOnlyMiddleware)
       .forRoutes('/auth/login', '/auth/register');
+
+    // Auth Access Only
+    // If user is not authenticated and tries to access these routes, redirect to /auth/login
+    consumer
+      .apply(AuthenticatedOnlyMiddleware)
+      .forRoutes('/my-movies', '/movies/*/watch');
   }
 }

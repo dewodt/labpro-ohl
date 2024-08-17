@@ -1,2 +1,2 @@
-export * from './authenticated.middleware';
-export * from './non-authenticated.middleware';
+export * from './authenticated-only.middleware';
+export * from './non-authenticated-only.middleware';

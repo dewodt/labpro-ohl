@@ -1,7 +1,6 @@
 import { FilmDetailResponseDto, FilmOverviewResponseDto } from './dto';
 import { BuyFilmResponseDto } from './dto/buy-film-dto';
 import { CreateFilmRequestDto } from './dto/create-film.dto';
-import { FilmPurchasesResponseDto } from './dto/film-purchases.dto';
 import { UpdateFilmRequestDto } from './dto/update-film.dto';
 import { FilmsService } from './films.service';
 import {
@@ -54,20 +53,21 @@ export class FilmsController {
     return ResponseDto.success('Films retrieved successfully"', responseData);
   }
 
-  @Get('purchases')
-  @HttpCode(200)
-  async getPurchases(@ReqUser() user: UserPayload) {
-    const filmTransactions = await this.filmsService.getPurchases(user.id);
+  // Not FE Admin Requirement
+  // @Get('purchases')
+  // @HttpCode(200)
+  // async getPurchases(@ReqUser() user: UserPayload) {
+  //   const { filmTransactions } = await this.filmsService.getPurchases(user.id);
 
-    // Map to response
-    const responseData =
-      FilmPurchasesResponseDto.fromFilmTransactions(filmTransactions);
+  //   // Map to response
+  //   const responseData =
+  //     FilmPurchasesResponseDto.fromFilmTransactions(filmTransactions);
 
-    return ResponseDto.success(
-      'Purchased films retrieved successfully',
-      responseData,
-    );
-  }
+  //   return ResponseDto.success(
+  //     'Purchased films retrieved successfully',
+  //     responseData,
+  //   );
+  // }
 
   @Get(':id')
   @HttpCode(200)
@@ -109,6 +109,7 @@ export class FilmsController {
     return ResponseDto.success('Film deleted successfully', responseData);
   }
 
+  // Not FE Admin Requirement
   @Post(':id/buy')
   @HttpCode(200)
   async buy(

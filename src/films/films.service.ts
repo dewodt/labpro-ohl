@@ -72,7 +72,6 @@ export class FilmsService {
 
       return newFilm;
     } catch (error) {
-      console.log(error);
       throw new InternalServerErrorException(
         ResponseDto.error('Failed to save film'),
       );
@@ -377,18 +376,83 @@ export class FilmsService {
     }
   }
 
-  async getPurchases(userId: string): Promise<FilmTransaction[]> {
+  /**
+   * Get all films bought by a user
+   *
+   * If searchQuery is provided, it will filter the films by title or director
+   * If pagination is provided, it will paginate the result
+   *
+   * @param userId
+   * @param searchQuery
+   * @param pagination
+   * @returns
+   */
+  async getPurchases(
+    userId: string,
+    searchQuery?: string,
+    pagination?: PaginationParams,
+  ): Promise<{
+    filmTransactions: FilmTransaction[];
+    pagination: PaginationDao | undefined;
+  }> {
     // Get all films bought by userID
-    const filmTransactionRepository =
-      this.dataSource.getRepository(FilmTransaction);
 
     try {
-      const filmTransactions = await filmTransactionRepository.find({
-        where: { user: { id: userId } },
-        relations: ['film'],
-      });
+      const filmTransactionRepository =
+        this.dataSource.getRepository(FilmTransaction);
+      let filmTransactionQueryBuilder =
+        filmTransactionRepository.createQueryBuilder('filmTransaction');
 
-      return filmTransactions;
+      // Filter by user id and left join film
+      // order by time bought
+      filmTransactionQueryBuilder = filmTransactionQueryBuilder
+        .where('filmTransaction.user_id = :userId', { userId })
+        .leftJoinAndSelect('filmTransaction.film', 'film')
+        .orderBy('filmTransaction.createdAt', 'DESC');
+
+      // Filter by title or director
+      if (searchQuery) {
+        filmTransactionQueryBuilder = filmTransactionQueryBuilder.andWhere(
+          '(film.title ILIKE :query OR film.director ILIKE :query)',
+          {
+            query: `%${searchQuery}%`,
+          },
+        );
+      }
+
+      // Paginate
+      if (pagination) {
+        const totalTransactions = await filmTransactionQueryBuilder.getCount();
+        if (totalTransactions === 0) {
+          return {
+            filmTransactions: [],
+            pagination: undefined,
+          };
+        }
+
+        const totalPage = Math.ceil(totalTransactions / pagination.limit);
+        const page = Math.min(pagination.page, totalPage);
+        const limit = pagination.limit;
+
+        filmTransactionQueryBuilder = filmTransactionQueryBuilder
+          .skip((page - 1) * limit)
+          .take(limit);
+
+        const filmTransactions = await filmTransactionQueryBuilder.getMany();
+
+        return {
+          filmTransactions: filmTransactions,
+          pagination: new PaginationDao(page, limit, totalTransactions),
+        };
+      } else {
+        // No pagination
+        const filmTransactions = await filmTransactionQueryBuilder.getMany();
+
+        return {
+          filmTransactions: filmTransactions,
+          pagination: undefined,
+        };
+      }
     } catch (error) {
       // Unexpected error
       throw new InternalServerErrorException(

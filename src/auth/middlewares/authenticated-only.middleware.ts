@@ -1,3 +1,4 @@
+import { JwtPayload } from '../auth.interface';
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NextFunction, Request, Response } from 'express';
@@ -16,7 +17,14 @@ export class AuthenticatedOnlyMiddleware implements NestMiddleware {
 
     // Validate jwt token
     try {
-      await this.jwtService.verifyAsync(cookieToken);
+      const jwtPayload =
+        await this.jwtService.verifyAsync<JwtPayload>(cookieToken);
+      req.user = {
+        id: jwtPayload.sub,
+        email: jwtPayload.email,
+        role: jwtPayload.role,
+        username: jwtPayload.username,
+      };
     } catch (error) {
       // Invalid token, delete cookie and redirect to login
       res.clearCookie('labpro-ohl-auth');

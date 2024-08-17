@@ -71,11 +71,11 @@ class MovieSearchManager {
     searchParams.delete('page');
     searchParams.delete('limit');
     searchParams.set('search', searchQuery);
-    window.location.href = `/movies?${searchParams.toString()}`;
+    window.location.href = `${window.location.pathname}?${searchParams.toString()}`;
   }
 
   private handleResetSearch(): void {
-    window.location.href = '/movies';
+    window.location.href = window.location.pathname;
   }
 }
 

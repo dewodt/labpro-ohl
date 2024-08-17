@@ -10,8 +10,10 @@ import {
   Get,
   HttpCode,
   Post,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { ReqUser } from 'src/common/decorators';
 import { BearerToken } from 'src/common/decorators/bearer-token.decorator';
 import { ResponseDto } from 'src/common/dto/response.dto';
@@ -22,7 +24,10 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(200)
-  async login(@Body() body: LoginRequestDto) {
+  async login(
+    @Body() body: LoginRequestDto,
+    @Res({ passthrough: true }) respose: Response,
+  ) {
     // Call login service
     const result = await this.authService.login(body);
 
@@ -31,6 +36,14 @@ export class AuthController {
       result.token,
       result.user.username,
     );
+
+    // Set cookie
+    respose.cookie('labpro-ohl-auth', result.token, {
+      maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+    });
 
     return new ResponseDto('success', 'Login success', responseData);
   }

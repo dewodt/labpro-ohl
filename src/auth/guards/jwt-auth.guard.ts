@@ -32,16 +32,24 @@ export class JwtAuthGuard implements CanActivate {
     // Get request
     const request = context.switchToHttp().getRequest<Request>();
 
-    // Get bearer token from request header
+    // Get bearer token from request header or cookie
     const bearerToken = this.extractTokenFromHeader(request);
-    if (!bearerToken) {
+    const cookieToken = this.extractTokenFromCookie(request);
+
+    let resolvedToken: string | undefined;
+    // prioritize bearer token
+    if (bearerToken) {
+      resolvedToken = bearerToken;
+    } else if (cookieToken) {
+      resolvedToken = cookieToken;
+    } else {
       throw new UnauthorizedException(new ResponseDto('error', 'Unauthorized'));
     }
 
     // Check if token is valid
     let jwtPayload: JwtPayload;
     try {
-      jwtPayload = await this.jwtService.verifyAsync<JwtPayload>(bearerToken);
+      jwtPayload = await this.jwtService.verifyAsync<JwtPayload>(resolvedToken);
     } catch (error) {
       throw new UnauthorizedException(new ResponseDto('error', 'Unauthorized'));
     }
@@ -75,5 +83,9 @@ export class JwtAuthGuard implements CanActivate {
   private extractTokenFromHeader(request: Request): string | undefined {
     const [type, token] = request.headers.authorization?.split(' ') ?? [];
     return type === 'Bearer' ? token : undefined;
+  }
+
+  private extractTokenFromCookie(request: Request): string | undefined {
+    return request.cookies['labpro-ohl-auth'];
   }
 }

@@ -1,6 +1,7 @@
 import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import * as cookieParser from 'cookie-parser';
 import { Logger } from 'nestjs-pino';
 import { resolve } from 'path';
 
@@ -25,6 +26,9 @@ async function bootstrap() {
     credentials: true,
     maxAge: 24 * 60 * 60,
   });
+
+  // Cookie parser
+  app.use(cookieParser());
 
   // Setup template engine and static files
   app.useStaticAssets(resolve('./public'));

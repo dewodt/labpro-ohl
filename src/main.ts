@@ -2,8 +2,10 @@ import { AppModule } from './app.module';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import * as cookieParser from 'cookie-parser';
+import * as hbs from 'hbs';
 import { Logger } from 'nestjs-pino';
 import { resolve } from 'path';
+import { formatDuration } from 'views/helpers';
 
 async function bootstrap() {
   // Create nest app
@@ -34,6 +36,7 @@ async function bootstrap() {
   app.useStaticAssets(resolve('./public'));
   app.setBaseViewsDir(resolve('./views'));
   app.setViewEngine('hbs');
+  hbs.registerHelper('formatDuration', formatDuration);
 
   // Listen to request
   await app.listen(process.env.APP_PORT || 3000);

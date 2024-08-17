@@ -4,8 +4,10 @@ import {
   AuthenticatedOnlyMiddleware,
   NonAuthenticatedOnlyMiddleware,
 } from 'src/auth/middlewares';
+import { FilmsModule } from 'src/films/films.module';
 
 @Module({
+  imports: [FilmsModule],
   controllers: [WebController],
 })
 export class WebModule implements NestModule {

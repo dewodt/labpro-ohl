@@ -8,9 +8,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { BucketService } from 'src/bucket/bucket.service';
+import { PaginationDao } from 'src/common/dao';
+import { PaginationParams } from 'src/common/decorators';
 import { ResponseDto } from 'src/common/dto';
 import { User } from 'src/users/entities';
-import { DataSource, ILike, QueryFailedError } from 'typeorm';
+import { DataSource, QueryFailedError } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -77,27 +79,64 @@ export class FilmsService {
     }
   }
 
-  async findAll(titleOrDirectorQuery: string | undefined): Promise<Film[]> {
+  async findAll(
+    titleOrDirectorQuery?: string,
+    pagination?: PaginationParams,
+  ): Promise<{
+    films: Film[];
+    pagination: PaginationDao | undefined;
+  }> {
     // Get all films
-    const filmRepository = this.dataSource.getRepository(Film);
 
     try {
-      const films = await filmRepository.find(
-        titleOrDirectorQuery
-          ? {
-              where: [
-                {
-                  title: ILike(`%${titleOrDirectorQuery}%`),
-                },
-                {
-                  director: ILike(`%${titleOrDirectorQuery}%`),
-                },
-              ],
-            }
-          : undefined,
-      );
+      const filmRepository = this.dataSource.getRepository(Film);
+      let filmsQuery = filmRepository.createQueryBuilder('film');
 
-      return films;
+      // Filter by title or director
+      if (titleOrDirectorQuery) {
+        filmsQuery = filmsQuery.where(
+          'film.title ILIKE :query OR film.director ILIKE :query',
+          {
+            query: `%${titleOrDirectorQuery}%`,
+          },
+        );
+      }
+
+      // Order by release year
+      filmsQuery = filmsQuery.orderBy('film.releaseYear', 'DESC');
+
+      if (pagination) {
+        // Count total films
+        const totalFilms = await filmsQuery.getCount();
+        if (totalFilms === 0) {
+          return {
+            films: [],
+            pagination: undefined,
+          };
+        }
+
+        // Pagination
+        const totalPage = Math.ceil(totalFilms / pagination.limit);
+        const page = Math.min(pagination.page, totalPage);
+        const limit = pagination.limit;
+
+        filmsQuery = filmsQuery.skip((page - 1) * limit).take(limit);
+
+        const films = await filmsQuery.getMany();
+
+        return {
+          films,
+          pagination: new PaginationDao(page, limit, totalFilms),
+        };
+      } else {
+        // No pagination
+        const films = await filmsQuery.getMany();
+
+        return {
+          films,
+          pagination: undefined,
+        };
+      }
     } catch (error) {
       // Unexpected error
       throw new InternalServerErrorException(

@@ -45,7 +45,8 @@ export class FilmsController {
   @Get()
   @HttpCode(200)
   async findAll(@Query('q') query: string | undefined) {
-    const films = await this.filmsService.findAll(query);
+    // API Contract in the specification doesnt use pagination (only search query)
+    const { films } = await this.filmsService.findAll(query);
 
     // Map to response
     const responseData = FilmOverviewResponseDto.fromFilms(films);

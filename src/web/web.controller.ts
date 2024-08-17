@@ -7,4 +7,10 @@ export class WebController {
   login() {
     return {};
   }
+
+  @Get('auth/register')
+  @Render('register')
+  register() {
+    return {};
+  }
 }

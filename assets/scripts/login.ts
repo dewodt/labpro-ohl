@@ -1,20 +1,20 @@
 // Prevent default form submission
 document.addEventListener('DOMContentLoaded', function () {
   const loginForm = document.getElementById('login-form');
-  loginForm?.addEventListener('submit', handleSubmit);
+  loginForm?.addEventListener('submit', handleSubmitLogin);
 });
 
-async function handleSubmit(e: Event) {
+async function handleSubmitLogin(e: Event) {
   e.preventDefault();
 
-  if (!validateForm()) {
+  if (!validateLoginForm()) {
     return;
   }
 
-  await submitForm();
+  await submitLoginForm();
 }
 
-function validateForm(): boolean {
+function validateLoginForm(): boolean {
   const usernameField = document.getElementById('username') as HTMLInputElement;
   const username = usernameField.value;
   const passwordField = document.getElementById('password') as HTMLInputElement;
@@ -35,7 +35,7 @@ function validateForm(): boolean {
   return true;
 }
 
-async function submitForm() {
+async function submitLoginForm() {
   const usernameField = document.getElementById('username') as HTMLInputElement;
   const passwordField = document.getElementById('password') as HTMLInputElement;
   const loginButton = document.getElementById(

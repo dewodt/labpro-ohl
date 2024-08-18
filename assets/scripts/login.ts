@@ -48,6 +48,7 @@ class LoginFormManager {
   }
 
   private setupEventListeners(): void {
+    // Submit
     this.loginForm.addEventListener(
       'submit',
       this.handleSubmitLogin.bind(this),

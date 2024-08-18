@@ -4,7 +4,7 @@ class NavbarManager {
   private sideBarContainerElement: HTMLDivElement;
   private sidebarOpenButton: HTMLButtonElement;
   private sidebarCloseButton: HTMLButtonElement;
-  private signOutButton: HTMLButtonElement;
+  private signOutButton: HTMLButtonElement | null;
 
   constructor() {
     this.bodyElement = document.querySelector('body') as HTMLBodyElement;
@@ -77,14 +77,16 @@ class NavbarManager {
     });
 
     // Sign out button
-    this.signOutButton.addEventListener('click', () => {
-      this.handleSignOut();
-    });
+    if (this.signOutButton) {
+      this.signOutButton.addEventListener('click', () => {
+        this.handleSignOut();
+      });
+    }
   }
 
   private async handleSignOut() {
     // Disable logout button
-    this.signOutButton.disabled = true;
+    this.signOutButton!.disabled = true;
 
     // Call logout API
     try {
@@ -103,7 +105,7 @@ class NavbarManager {
     } catch (error) {
       alert(error instanceof Error ? error.message : 'Unknown error');
     } finally {
-      this.signOutButton.disabled = false;
+      this.signOutButton!.disabled = false;
     }
   }
 

@@ -5,9 +5,11 @@ import {
   ParseUUIDPipe,
   Query,
   Render,
+  Res,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { UserPayload } from 'src/auth/auth.interface';
 import { RedirectUnauthorizedFilter } from 'src/auth/filters';
 import { JwtAuthGuard } from 'src/auth/guards';
@@ -128,6 +130,28 @@ export class WebMoviesController {
   }
 
   // Protected
+  @Get('movies/:id/watch')
+  @UseFilters(RedirectUnauthorizedFilter)
+  @Render('movie-detail-watch')
+  async watchMovie(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ReqUser() reqUser: UserPayload,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    // Validate if user has purchased the movie
+    const hasPurchased = await this.filmService.hasPurchased(reqUser.id, id);
+    if (!hasPurchased) {
+      // Redirect user to movie detail page if not purchased
+      res.redirect(`/movies/${id}`);
+      return;
+    }
+
+    // Fetch movie from API
+    const film = await this.filmService.findOne(id);
+
+    // Return data to handlebar for SSR
+    return { film };
+  }
 
   private buildSearchPaginationUrl(
     search: string | undefined,

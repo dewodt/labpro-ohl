@@ -7,15 +7,27 @@
     />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <link rel="stylesheet" href="/styles/tailwind.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="/scripts/navbar.js" defer></script>
   </head>
-  <body class="flex min-h-screen">
-    <main class="flex flex-auto justify-center bg-muted px-4 py-12 lg:p-24">
+  <body class="flex min-h-screen flex-col">
+    {{!-- Navbar --}}
+    {{> navbar isUserLoggedIn=isUserLoggedIn}}
+    <main class="flex flex-auto justify-center bg-muted px-4 py-12 lg:p-16">
       <section class="w-full max-w-5xl space-y-4">
         {{!-- Back button --}}
         <a
-          href="javascript:history.back()"
-          class="flex flex-row items-center gap-2 text-primary"
+          href="/movies/{{ film.id }}"
+          class="flex w-fit flex-none flex-row items-center gap-1 rounded-full border bg-card py-2 pl-2 pr-4 text-primary shadow-md transition-all duration-200 hover:border-primary hover:bg-primary hover:text-primary-foreground"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -31,20 +43,20 @@
           >
             <path d="m15 18-6-6 6-6" />
           </svg>
-          <span class="font-medium">Back</span>
+          <span class="font-semibold">Back</span>
         </a>
 
         <article
-          class="space-y-4 rounded-xl border bg-card p-4 shadow-xl sm:p-8"
+          class="space-y-4 rounded-2xl border bg-card p-6 shadow-xl lg:p-8"
         >
           <header class="space-y-2">
             {{!-- Title --}}
-            <h1 class="text-2xl font-semibold">{{ film.title }}</h1>
+            <h1 class="text-2xl font-bold">{{ film.title }}</h1>
 
-            <div class="flex flex-row gap-2.5">
+            <div class="flex flex-row flex-wrap items-center gap-2.5">
               {{!-- Genre --}}
               {{#if film.genre.length}}
-              <ul class="flex flex-row gap-2">
+              <ul class="flex flex-row flex-wrap gap-2">
                 {{#each film.genre}}
                 <li
                   class="inline-flex items-center rounded-full border border-transparent bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
@@ -54,26 +66,30 @@
                 {{/each}}
               </ul>
 
-              {{!-- Sepearator --}}
-              <div class="border-r border-black"></div>
+              <div class="h-5 border-r border-black"></div>
               {{/if}}
 
-              {{!-- Duration --}}
-              <p>
-                {{formatDuration film.duration}}
+              {{!-- Releaseyear --}}
+              <p class="font-medium">
+                {{ film.releaseYear }}
               </p>
 
-              <div class="border-r border-black"></div>
+              <div class="h-5 border-r border-black"></div>
 
-              <p>
-                {{ film.releaseYear }}
+              {{!-- Duration --}}
+              <p class="font-medium">
+                {{formatDuration film.duration}}
               </p>
             </div>
           </header>
 
           {{! Video Player }}
           <div class="space-y-1">
-            <video id="video-player" controls class="w-full rounded-xl">
+            <video
+              id="video-player"
+              controls
+              class="flex w-full items-center justify-center rounded-2xl border bg-muted text-muted-foreground"
+            >
               <source src="{{ film.videoUrl }}" />
               Your browser does not support the video tag.
             </video>

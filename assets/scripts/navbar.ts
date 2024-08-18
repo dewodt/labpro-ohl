@@ -34,9 +34,11 @@ class NavbarManager {
 
   private init() {
     document.addEventListener('DOMContentLoaded', () => {
+      // Navbar active links
+      this.setupActiveLinksStyle();
+
       // Event listener
       this.setupEventListeners();
-      this.setupActiveLinksStyle();
     });
   }
 
@@ -44,13 +46,14 @@ class NavbarManager {
     const currentPath = window.location.pathname;
 
     const linksElement = Array.from(
-      document.querySelectorAll('.navbar-links-ul li a'),
-    ).filter((link) => !link.querySelector('button'));
+      document.querySelectorAll('#navbar-links-ul li a'),
+    ).filter((linkElement) => !linkElement.querySelector('button'));
 
     linksElement.forEach((linkElement) => {
-      const href = linkElement.getAttribute('href');
+      const href = linkElement.getAttribute('href')!;
 
-      if (href === currentPath) {
+      // if (currentPath.startsWith(href)) {
+      if (currentPath === href) {
         linkElement.classList.remove('font-medium', 'hover:text-primary');
         linkElement.classList.add('text-primary', 'font-semibold');
       }
@@ -79,10 +82,21 @@ class NavbarManager {
     });
   }
 
-  private handleSignOut() {
-    // Remove cookie
-    document.cookie =
-      'labpro-ohl-auth' + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  private async handleSignOut() {
+    // Disable logout button
+    this.signOutButton.disabled = true;
+
+    // Call logout API
+    const response = await fetch('/logout', {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      // Show error message
+      alert('Failed to sign out');
+      this.signOutButton.disabled = false;
+      return;
+    }
 
     // Redirect to login page
     window.location.reload();

@@ -24,12 +24,12 @@
     {{!-- Navbar --}}
     {{> navbar isUserLoggedIn=isUserLoggedIn}}
 
-    <main class="flex flex-auto justify-center px-4 py-12 lg:p-24">
-      <section class="flex w-full max-w-7xl flex-col items-center gap-y-8">
+    <main class="flex flex-auto justify-center px-4 py-12 lg:p-16">
+      <section class="flex w-full max-w-7xl flex-col items-center">
         <h1 class="text-center text-3xl font-bold">Available Movies</h1>
 
         {{!-- Search --}}
-        <div class="flex w-full max-w-xl flex-row gap-3">
+        <div class="flex w-full max-w-xl flex-row gap-3 mt-5">
           {{!-- Input --}}
           <input
             id="search-input"
@@ -94,13 +94,13 @@
 
         {{#if films.length}}
         <ul
-          class="grid w-fit grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
+          class="grid w-fit grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mt-10"
         >
           {{#each films}}
           <li class="flex">
             <a href="/movies/{{ this.id }}" class="flex flex-auto">
               <article
-                class="flex w-[300px] flex-col overflow-hidden rounded-xl border bg-card text-card-foreground shadow-lg"
+                class="flex w-[300px] flex-col overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-lg duration-300 transition-all hover:scale-[1.03]"
               >
                 {{!-- Image --}}
                 {{#if this.coverImageUrl}}
@@ -117,7 +117,7 @@
                 {{/if}}
 
                 <div
-                  class="flex flex-auto flex-col justify-between gap-2 border-t p-4"
+                  class="flex flex-auto flex-col justify-between gap-2 border-t p-5"
                 >
                   <div>
                     {{!-- Title --}}
@@ -125,23 +125,19 @@
                       {{ this.title }}
                     </h2>
 
-                    {{! Duration hh:mm:ss }}
-                    <p class="text-base text-muted-foreground">
-                      Duration:
-                      {{formatDuration this.duration}}
-                    </p>
+                    <div class="flex flex-row items-center flex-wrap gap-2 mt-1">
+                      {{! Release year }}
+                      <p class="text-base font-medium">
+                        {{ this.releaseYear }}
+                      </p>
 
-                    {{! Directed By }}
-                    <p class="text-base text-muted-foreground">
-                      Director:
-                      {{ this.director }}
-                    </p>
+                      <div class="border-r border-black h-5"></div>
 
-                    {{! Release year }}
-                    <p class="text-base text-muted-foreground">
-                      Release year:
-                      {{ this.releaseYear }}
-                    </p>
+                      {{! Duration hh:mm:ss }}
+                      <p class="text-base font-medium">
+                        {{formatDuration this.duration}}
+                      </p>
+                    </div>
                   </div>
 
                   {{!-- Genres --}}
@@ -164,7 +160,7 @@
         </ul>
 
         {{#if pagination}}
-        <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center gap-4 mt-8">
           {{! Previous page }}
           <a
             href="{{ previousPageUrl }}"

@@ -23,12 +23,12 @@
   <body class="flex min-h-screen flex-col">
     {{!-- Navbar --}}
     {{> navbar isUserLoggedIn=isUserLoggedIn}}
-    <main class="flex flex-auto justify-center px-4 py-12 lg:p-24">
-      <section class="flex w-full max-w-7xl flex-col items-center gap-y-8">
+    <main class="flex flex-auto justify-center px-4 py-12 lg:p-16">
+      <section class="flex w-full max-w-7xl flex-col items-center">
         <h1 class="text-center text-3xl font-bold">My Movies</h1>
 
         {{!-- !Search --}}
-        <div class="flex w-full max-w-xl flex-row gap-3">
+        <div class="flex w-full max-w-xl flex-row gap-3 mt-5">
           {{!-- Input --}}
           <input
             id="search-input"
@@ -93,7 +93,7 @@
 
         {{#if filmTransactions.length}}
         <ul
-          class="grid w-fit grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
+          class="grid w-fit grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mt-10"
         >
           {{#each filmTransactions}}
           {{!-- If film is not deleted by admin --}}
@@ -101,7 +101,7 @@
           <li class="flex">
             <a href="/movies/{{ this.film.id }}" class="flex flex-auto">
               <article
-                class="flex w-[300px] flex-col overflow-hidden rounded-xl border bg-card text-card-foreground shadow-lg"
+                class="flex w-[300px] flex-col overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-lg duration-300 transition-all hover:scale-[1.03]"
               >
                 {{!-- Image --}}
                 {{#if this.film.coverImageUrl}}
@@ -118,7 +118,7 @@
                 {{/if}}
 
                 <div
-                  class="flex flex-auto flex-col justify-between gap-2 border-t p-4"
+                  class="flex flex-auto flex-col justify-between gap-2 border-t p-5"
                 >
                   <div>
                     {{!-- Title --}}
@@ -126,23 +126,19 @@
                       {{ this.film.title }}
                     </h2>
 
-                    {{! Duration hh:mm:ss }}
-                    <p class="text-base text-muted-foreground">
-                      Duration:
-                      {{formatDuration this.film.duration}}
-                    </p>
+                    <div class="flex flex-row items-center flex-wrap gap-2 mt-1">
+                      {{! Release year }}
+                      <p class="text-base font-medium">
+                        {{ this.film.releaseYear }}
+                      </p>
 
-                    {{! Directed By }}
-                    <p class="text-base text-muted-foreground">
-                      Director:
-                      {{ this.film.director }}
-                    </p>
+                      <div class="border-r border-black h-5"></div>
 
-                    {{! Release year }}
-                    <p class="text-base text-muted-foreground">
-                      Release year:
-                      {{ this.film.releaseYear }}
-                    </p>
+                      {{! Duration hh:mm:ss }}
+                      <p class="text-base font-medium">
+                        {{formatDuration this.film.duration}}
+                      </p>
+                    </div>
                   </div>
 
                   {{!-- Genres --}}
@@ -162,10 +158,11 @@
             </a>
           </li>
           {{else}}
+
           {{!-- Film is delete by admin --}}
           <li class="flex">
             <article
-              class="flex w-[300px] flex-col overflow-hidden rounded-xl border bg-card text-card-foreground shadow-lg"
+              class="flex w-[300px] flex-col overflow-hidden rounded-2xl border bg-card text-card-foreground shadow-lg duration-300 transition-all hover:scale-[1.03]"
             >
               {{!-- Image --}}
               <div
@@ -174,16 +171,15 @@
                 <p>Cover Image Not Available</p>
               </div>
 
-              <div class="flex flex-auto flex-col border-t p-4">
+              <div class="flex flex-auto flex-col border-t p-5">
                 {{!-- Title --}}
                 <h2 class="line-clamp-2 text-xl font-semibold">
                   Movie Is Not Available
                 </h2>
 
                 {{! Duration hh:mm:ss }}
-                <p class="text-base text-muted-foreground">
-                  The movie has been deleted by administator. Please contact the
-                  administrator for more information.
+                <p class="text-base text-muted-foreground mt-1">
+                  The movie has been deleted by administator.
                 </p>
               </div>
             </article>
@@ -193,7 +189,7 @@
         </ul>
 
         {{#if pagination}}
-        <div class="flex flex-row items-center gap-4">
+        <div class="flex flex-row items-center gap-4 mt-8">
           {{! Previous page }}
           <a href="{{ previousPageUrl }}"
             {{#unless previousPageUrl}}

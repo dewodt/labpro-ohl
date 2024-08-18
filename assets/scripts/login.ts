@@ -82,7 +82,6 @@ class LoginFormManager {
         throw new Error(responseBody.message);
       }
 
-      alert('Login successful');
       window.location.href = '/my-movies';
     } catch (error) {
       alert(

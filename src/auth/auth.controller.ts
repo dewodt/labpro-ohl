@@ -48,6 +48,15 @@ export class AuthController {
     return new ResponseDto('success', 'Login success', responseData);
   }
 
+  @Get('logout')
+  @HttpCode(200)
+  async logout(@Res({ passthrough: true }) respose: Response) {
+    // Clear cookie
+    respose.clearCookie('labpro-ohl-auth');
+
+    return new ResponseDto('success', 'Logout success');
+  }
+
   @Post('register')
   @HttpCode(201)
   async register(@Body() body: RegisterRequestDto) {

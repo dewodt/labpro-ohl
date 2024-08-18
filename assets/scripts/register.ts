@@ -86,7 +86,6 @@ class RegisterFormManager {
       alert('Email must be at most 255 characters long');
       return false;
     }
-    // Add more email-specific validations here if needed
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       alert('Invalid email format');
@@ -105,7 +104,6 @@ class RegisterFormManager {
       alert('Full name must be at most 255 characters long');
       return false;
     }
-    // Add more full name-specific validations here if needed
     return true;
   }
 
@@ -175,7 +173,6 @@ class RegisterFormManager {
         throw new Error(responseBody.message);
       }
 
-      alert('Register successful');
       window.location.href = '/auth/login';
     } catch (error) {
       alert(

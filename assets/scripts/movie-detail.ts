@@ -76,8 +76,6 @@ class MovieDetailManager {
       return;
     }
 
-    alert('Movie successfully bought!');
-
     // Refresh page
     window.location.reload();
   }

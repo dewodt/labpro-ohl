@@ -1,78 +1,80 @@
 <html>
   <head>
-    <title>Watch {{film.title}} | Labpro OHL</title>
+    <title>Watch {{ film.title }} | Labpro OHL</title>
     <meta
-      name='description'
-      content='Tugas Seleksi 3 Asisten Laboratorium Programming 2024 ITB'
+      name="description"
+      content="Tugas Seleksi 3 Asisten Laboratorium Programming 2024 ITB"
     />
-    <meta charset='utf-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <link rel='stylesheet' href='/styles/tailwind.css' />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/tailwind.css" />
   </head>
-  <body class='flex min-h-screen'>
-    <main class='flex flex-auto justify-center bg-muted px-4 py-12 lg:p-24'>
-      <section class='w-full max-w-5xl space-y-4'>
-        {{! Back button }}
+  <body class="flex min-h-screen">
+    <main class="flex flex-auto justify-center bg-muted px-4 py-12 lg:p-24">
+      <section class="w-full max-w-5xl space-y-4">
+        {{!-- Back button --}}
         <a
-          href='javascript:history.back()'
-          class='flex flex-row items-center gap-2 text-primary'
+          href="javascript:history.back()"
+          class="flex flex-row items-center gap-2 text-primary"
         >
           <svg
-            xmlns='http://www.w3.org/2000/svg'
-            width='24'
-            height='24'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            stroke-width='2'
-            stroke-linecap='round'
-            stroke-linejoin='round'
-            class='lucide lucide-chevron-left'
-          ><path d='m15 18-6-6 6-6' /></svg>
-          <span class='font-medium'>Back</span>
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-chevron-left"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          <span class="font-medium">Back</span>
         </a>
 
         <article
-          class='space-y-4 rounded-xl border bg-card p-4 shadow-xl sm:p-8'
+          class="space-y-4 rounded-xl border bg-card p-4 shadow-xl sm:p-8"
         >
-          <header class='space-y-2'>
-            {{! Title }}
-            <h1 class='text-2xl font-semibold'>{{film.title}}</h1>
+          <header class="space-y-2">
+            {{!-- Title --}}
+            <h1 class="text-2xl font-semibold">{{ film.title }}</h1>
 
-            <div class='flex flex-row gap-2.5'>
-              {{! Genre }}
+            <div class="flex flex-row gap-2.5">
+              {{!-- Genre --}}
               {{#if film.genre.length}}
-                <ul class='flex flex-row gap-2'>
-                  {{#each film.genre}}
-                    <li
-                      class='inline-flex items-center rounded-full border border-transparent bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2'
-                    >
-                      {{this}}
-                    </li>
-                  {{/each}}
-                </ul>
+              <ul class="flex flex-row gap-2">
+                {{#each film.genre}}
+                <li
+                  class="inline-flex items-center rounded-full border border-transparent bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                >
+                  {{ this }}
+                </li>
+                {{/each}}
+              </ul>
 
-                {{! Sepearator }}
-                <div class='border-r border-black'></div>
+              {{!-- Sepearator --}}
+              <div class="border-r border-black"></div>
               {{/if}}
 
-              {{! Duration }}
+              {{!-- Duration --}}
               <p>
                 {{formatDuration film.duration}}
               </p>
 
-              <div class='border-r border-black'></div>
+              <div class="border-r border-black"></div>
 
               <p>
-                {{film.releaseYear}}
+                {{ film.releaseYear }}
               </p>
             </div>
           </header>
 
           {{! Video Player }}
-          <div class='space-y-1'>
-            <video id='video-player' controls class='w-full rounded-xl'>
-              <source src='{{film.videoUrl}}' />
+          <div class="space-y-1">
+            <video id="video-player" controls class="w-full rounded-xl">
+              <source src="{{ film.videoUrl }}" />
               Your browser does not support the video tag.
             </video>
           </div>

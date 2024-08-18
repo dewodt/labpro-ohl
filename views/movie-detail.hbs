@@ -1,138 +1,152 @@
 <html>
   <head>
-    <title>{{film.title}} | Labpro OHL</title>
+    <title>{{ film.title }} | Labpro OHL</title>
     <meta
-      name='description'
-      content='Tugas Seleksi 3 Asisten Laboratorium Programming 2024 ITB'
+      name="description"
+      content="Tugas Seleksi 3 Asisten Laboratorium Programming 2024 ITB"
     />
-    <meta charset='utf-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <link rel='stylesheet' href='/styles/tailwind.css' />
-    <script src='/scripts/movie-detail.js' defer></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/styles/tailwind.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="/scripts/navbar.js" defer></script>
+
+    <script src="/scripts/login.js" defer></script>
   </head>
-  <body class='flex min-h-screen'>
-    <main class='flex flex-auto justify-center bg-muted px-4 py-12 lg:p-24'>
-      <section class='space-y-4'>
-        {{! Back button }}
+  <body class="flex min-h-screen flex-col">
+    {{!-- Navbar --}}
+    {{> navbar isUserLoggedIn=isUserLoggedIn}}
+
+    <main class="flex flex-auto justify-center bg-muted px-4 py-12 lg:p-24">
+      <section class="space-y-4">
+        {{!-- Back button --}}
         <a
-          href='javascript:history.back()'
-          class='flex flex-row items-center gap-2 text-primary'
+          href="javascript:history.back()"
+          class="flex flex-row items-center gap-2 text-primary"
         >
           <svg
-            xmlns='http://www.w3.org/2000/svg'
-            width='24'
-            height='24'
-            viewBox='0 0 24 24'
-            fill='none'
-            stroke='currentColor'
-            stroke-width='2'
-            stroke-linecap='round'
-            stroke-linejoin='round'
-            class='lucide lucide-chevron-left'
-          ><path d='m15 18-6-6 6-6' /></svg>
-          <span class='font-medium'>Back</span>
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-chevron-left"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          <span class="font-medium">Back</span>
         </a>
 
         <article
-          class='flex w-full max-w-5xl flex-col gap-8 rounded-xl border bg-card p-4 shadow-xl sm:flex-row sm:p-8'
+          class="flex w-full max-w-5xl flex-col gap-8 rounded-xl border bg-card p-4 shadow-xl sm:flex-row sm:p-8"
         >
-          {{! Cover }}
+          {{!-- Cover --}}
           {{#if film.coverImageUrl}}
-            <img
-              src='{{film.coverImageUrl}}'
-              class='aspect-[0.7] w-80 object-cover object-center'
-            />
+          <img
+            src="{{ film.coverImageUrl }}"
+            class="aspect-[0.7] w-80 object-cover object-center"
+          />
           {{else}}
-            <div
-              class='flex aspect-[0.7] w-80 items-center justify-center bg-muted text-muted-foreground'
-            >
-              <p>
-                Cover Image Not Available
-              </p>
-            </div>
+          <div
+            class="flex aspect-[0.7] w-80 items-center justify-center bg-muted text-muted-foreground"
+          >
+            <p>Cover Image Not Available</p>
+          </div>
           {{/if}}
 
-          <div class='space-y-4'>
-            <header class='space-y-2'>
-              {{! Title }}
-              <h1 class='text-2xl font-semibold'>{{film.title}}</h1>
+          <div class="space-y-4">
+            <header class="space-y-2">
+              {{!-- Title --}}
+              <h1 class="text-2xl font-semibold">{{ film.title }}</h1>
 
-              {{! Genre }}
+              {{!-- Genre --}}
               {{#if film.genre.length}}
-                <ul class='flex flex-row gap-2'>
-                  {{#each film.genre}}
-                    <li
-                      class='inline-flex items-center rounded-full border border-transparent bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2'
-                    >
-                      {{this}}
-                    </li>
-                  {{/each}}
-                </ul>
+              <ul class="flex flex-row gap-2">
+                {{#each film.genre}}
+                <li
+                  class="inline-flex items-center rounded-full border border-transparent bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                >
+                  {{ this }}
+                </li>
+                {{/each}}
+              </ul>
               {{/if}}
             </header>
 
             {{! Release year }}
-            <div class='space-y-1'>
+            <div class="space-y-1">
               <p>
                 Release year:
-                {{film.releaseYear}}
+                {{ film.releaseYear }}
               </p>
 
-              {{! Duration }}
+              {{!-- Duration --}}
               <p>
                 Duration:
                 {{formatDuration film.duration}}
               </p>
 
-              {{! Director }}
+              {{!-- Director --}}
               <p>
                 Director:
-                {{film.director}}
+                {{ film.director }}
               </p>
 
-              {{! Description }}
+              {{!-- Description --}}
               <p>
-                {{film.description}}
+                {{ film.description }}
               </p>
             </div>
 
             {{! Buy movie section }}
-            <div class='flex items-center justify-center'>
+            <div class="flex items-center justify-center">
               {{#if isUserLoggedIn}}
-                {{#if hasPurchased}}
-                  <a href='/movies/{{film.id}}/watch'>
-                    <button
-                      class='inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
-                    >
-                      Watch Now
-                    </button>
-                  </a>
-                {{else}}
-                  <div class='flex flex-col items-center gap-2'>
-                    <button
-                      id='buy-movie-button'
-                      class='inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
-                    >
-                      Buy for 🪙&nbsp;
-                      <span id='movie-price-span'>{{film.price}}</span>
-                    </button>
-
-                    <p class='text-sm'>
-                      Your balance: 🪙
-                      <span id='balance-amount-span'>
-                        {{user.balance}}
-                      </span>
-                    </p>
-                  </div>
-                {{/if}}
+              {{#if hasPurchased}}
+              <a href="/movies/{{ film.id }}/watch">
+                <button
+                  class="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                >
+                  Watch Now
+                </button>
+              </a>
               {{else}}
-                <a href='/auth/login'>
-                  <button
-                    class='inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
-                  >
-                    Login to Watch
-                  </button>
-                </a>
+              <div class="flex flex-col items-center gap-2">
+                <button
+                  id="buy-movie-button"
+                  class="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                >
+                  Buy for 🪙&nbsp;
+                  <span id="movie-price-span">{{ film.price }}</span>
+                </button>
+
+                <p class="text-sm">
+                  Your balance: 🪙
+                  <span id="balance-amount-span">
+                    {{ user.balance }}
+                  </span>
+                </p>
+              </div>
+              {{/if}}
+              {{else}}
+              <a href="/auth/login">
+                <button
+                  class="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-6 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                >
+                  Login to Watch
+                </button>
+              </a>
               {{/if}}
             </div>
           </div>

@@ -22,7 +22,7 @@
     <script src="/scripts/login.js" defer></script>
   </head>
   <body class="flex min-h-screen flex-col">
-    {{ !Navbar }}
+    {{!-- Navbar --}}
     {{> navbar isUserLoggedIn=isUserLoggedIn}}
 
     {{! Main content }}
@@ -35,7 +35,7 @@
         <h1 class="text-center text-2xl font-bold">Login</h1>
 
         <form id="login-form" class="space-y-6">
-          {{ !Username }}
+          {{!-- Username --}}
           <div class="space-y-2">
             <label
               for="username"
@@ -52,7 +52,7 @@
             />
           </div>
 
-          {{ !Password }}
+          {{!-- Password  --}}
           <div class="space-y-2">
             <label
               for="password"

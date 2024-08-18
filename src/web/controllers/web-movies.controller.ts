@@ -37,12 +37,15 @@ export class WebMoviesController {
   async movies(
     @Query('search') searchQuery: string | undefined,
     @Pagination({ defaultLimit: 8 }) paginationQuery: PaginationParams,
+    @ReqUser() reqUser: UserPayload | undefined,
   ) {
     // Fetch movies from API
     const { films, pagination } = await this.filmService.findAll(
       searchQuery,
       paginationQuery,
     );
+
+    const isUserLoggedIn = !!reqUser;
 
     const previousPageUrl =
       pagination && pagination.previousPage
@@ -61,6 +64,7 @@ export class WebMoviesController {
       search: searchQuery,
       previousPageUrl,
       nextPageUrl,
+      isUserLoggedIn,
     };
   }
 
@@ -126,6 +130,7 @@ export class WebMoviesController {
       search: searchQuery,
       previousPageUrl,
       nextPageUrl,
+      isUserLoggedIn: true,
     };
   }
 

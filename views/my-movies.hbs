@@ -2,261 +2,281 @@
   <head>
     <title>My Movies | Labpro OHL</title>
     <meta
-      name='description'
-      content='Tugas Seleksi 3 Asisten Laboratorium Programming 2024 ITB'
+      name="description"
+      content="Tugas Seleksi 3 Asisten Laboratorium Programming 2024 ITB"
     />
-    <meta charset='utf-8' />
-    <meta name='viewport' content='width=device-width, initial-scale=1.0' />
-    <link rel='stylesheet' href='/styles/tailwind.css' />
-    <script src='/scripts/movies.js' defer></script>
-  </head>
-  <body class='flex min-h-screen'>
-    <main class='flex flex-auto justify-center px-4 py-12 lg:p-24'>
-      <section class='flex w-full max-w-7xl flex-col items-center gap-y-8'>
-        <h1 class='text-center text-3xl font-bold'>
-          My Movies
-        </h1>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/tailwind.css" />
 
-        {{! Search }}
-        <div class='flex w-full max-w-xl flex-row gap-3'>
-          {{! Input }}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="/scripts/navbar.js" defer></script>
+
+    <script src="/scripts/movies.js" defer></script>
+  </head>
+  <body class="flex min-h-screen flex-col">
+    {{!-- Navbar --}}
+    {{> navbar isUserLoggedIn=isUserLoggedIn}}
+    <main class="flex flex-auto justify-center px-4 py-12 lg:p-24">
+      <section class="flex w-full max-w-7xl flex-col items-center gap-y-8">
+        <h1 class="text-center text-3xl font-bold">My Movies</h1>
+
+        {{!-- !Search --}}
+        <div class="flex w-full max-w-xl flex-row gap-3">
+          {{!-- Input --}}
           <input
-            id='search-input'
-            type='text'
-            placeholder='Search for movies or directors you have bought'
-            class='flex h-10 w-full flex-auto rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50'
+            id="search-input"
+            type="text"
+            placeholder="Search for movies or directors you have bought"
+            class="flex h-10 w-full flex-auto rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           />
 
-          {{! Submit }}
+          {{!-- Submit --}}
           <button
-            id='search-submit-button'
-            class='inline-flex h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md bg-primary text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+            id="search-submit-button"
+            class="inline-flex h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md bg-primary text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
           >
             <svg
-              class='h-5 w-5'
-              xmlns='http://www.w3.org/2000/svg'
-              width='24'
-              height='24'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              stroke-width='2'
-              stroke-linecap='round'
-              stroke-linejoin='round'
-              class='lucide lucide-search'
-            ><circle cx='11' cy='11' r='8' /><path d='m21 21-4.3-4.3' /></svg>
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-search"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.3-4.3" />
+            </svg>
           </button>
 
-          {{! Reset }}
+          {{!-- Reset --}}
           <button
-            id='search-reset-button'
-            class='h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md bg-destructive text-sm font-medium text-destructive-foreground ring-offset-background transition-colors hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50
+            id="search-reset-button"
+            class="h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md bg-destructive text-sm font-medium text-destructive-foreground ring-offset-background transition-colors hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50
               {{#if search}}
               inline-flex
               {{else}}
               hidden
               {{/if}}
-            '
+            "
           >
             <svg
-              class='h-5 w-5'
-              xmlns='http://www.w3.org/2000/svg'
-              width='24'
-              height='24'
-              viewBox='0 0 24 24'
-              fill='none'
-              stroke='currentColor'
-              stroke-width='2'
-              stroke-linecap='round'
-              stroke-linejoin='round'
-              class='lucide lucide-filter-x'
-            ><path d='M13.013 3H2l8 9.46V19l4 2v-8.54l.9-1.055' /><path
-                d='m22 3-5 5'
-              /><path d='m17 3 5 5' /></svg>
+              class="h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-filter-x"
+            >
+              <path d="M13.013 3H2l8 9.46V19l4 2v-8.54l.9-1.055" />
+              <path d="m22 3-5 5" />
+              <path d="m17 3 5 5" />
+            </svg>
           </button>
         </div>
 
         {{#if filmTransactions.length}}
-          <ul
-            class='grid w-fit grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4'
-          >
-            {{#each filmTransactions}}
-              {{!-- If film is not deleted by admin --}}
-              {{#if this.film}}
-                <li class='flex'>
-                  <a href='/movies/{{this.film.id}}' class='flex flex-auto'>
-                    <article
-                      class='flex w-[300px] flex-col overflow-hidden rounded-xl border bg-card text-card-foreground shadow-lg'
-                    >
-                      {{! Image }}
-                      {{#if this.film.coverImageUrl}}
-                        <img
-                          src='{{this.film.coverImageUrl}}'
-                          class='aspect-[0.7] w-full object-cover object-center'
-                        />
-                      {{else}}
-                        <div
-                          class='flex aspect-[0.7] w-full items-center justify-center bg-muted text-muted-foreground'
-                        >
-                          <p>
-                            Cover Image Not Available
-                          </p>
-                        </div>
-                      {{/if}}
-
-                      <div
-                        class='flex flex-auto flex-col justify-between gap-2 border-t p-4'
-                      >
-                        <div>
-                          {{! Title }}
-                          <h2 class='line-clamp-2 text-xl font-semibold'>
-                            {{this.film.title}}
-                          </h2>
-
-                          {{! Duration hh:mm:ss }}
-                          <p class='text-base text-muted-foreground'>
-                            Duration:
-                            {{formatDuration this.film.duration}}
-                          </p>
-
-                          {{! Directed By }}
-                          <p class='text-base text-muted-foreground'>
-                            Director:
-                            {{this.film.director}}
-                          </p>
-
-                          {{! Release year }}
-                          <p class='text-base text-muted-foreground'>
-                            Release year:
-                            {{this.film.releaseYear}}
-                          </p>
-
-                        </div>
-
-                        {{! Genres }}
-                        {{#if this.film.genre.length}}
-                          <ul class='flex flex-row gap-2'>
-                            {{#each this.film.genre}}
-                              <li
-                                class='inline-flex items-center rounded-full border border-transparent bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2'
-                              >
-                                {{this}}
-                              </li>
-                            {{/each}}
-                          </ul>
-                        {{/if}}
-                      </div>
-                    </article>
-                  </a>
-                </li>
-              {{else}}
-              {{!-- Film is delete by admin --}}
-                <li class='flex'>
-                  <article
-                    class='flex w-[300px] flex-col overflow-hidden rounded-xl border bg-card text-card-foreground shadow-lg'
-                  >
-                    {{! Image }}
-                    <div
-                      class='flex aspect-[0.7] w-full items-center justify-center bg-muted text-muted-foreground'
-                    >
-                      <p>
-                        Cover Image Not Available
-                      </p>
-                    </div>
-
-                    <div
-                      class='flex flex-auto flex-col border-t p-4'
-                    >
-                      {{! Title }}
-                      <h2 class='line-clamp-2 text-xl font-semibold'>
-                        Movie Is Not Available
-                      </h2>
-
-                      {{! Duration hh:mm:ss }}
-                      <p class='text-base text-muted-foreground'>
-                        The movie has been deleted by administator. Please contact the administrator for more information.
-                      </p>
-                    </div>
-                  </article>
-                </li>
-              {{/if}}
-            {{/each}}
-          </ul>
-
-          {{#if pagination}}
-            <div class='flex flex-row items-center gap-4'>
-              {{! Previous page }}
-              <a
-                href='{{previousPageUrl}}'
-                {{#unless previousPageUrl}}
-                class="pointer-events-none"
-                {{/unless}}
+        <ul
+          class="grid w-fit grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4"
+        >
+          {{#each filmTransactions}}
+          {{!-- If film is not deleted by admin --}}
+          {{#if this.film}}
+          <li class="flex">
+            <a href="/movies/{{ this.film.id }}" class="flex flex-auto">
+              <article
+                class="flex w-[300px] flex-col overflow-hidden rounded-xl border bg-card text-card-foreground shadow-lg"
               >
-                <button
-                  class='inline-flex h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md border border-input bg-background text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
-                  {{#unless previousPageUrl}}
-                    disabled
-                  {{/unless}}
+                {{!-- Image --}}
+                {{#if this.film.coverImageUrl}}
+                <img
+                  src="{{ this.film.coverImageUrl }}"
+                  class="aspect-[0.7] w-full object-cover object-center"
+                />
+                {{else}}
+                <div
+                  class="flex aspect-[0.7] w-full items-center justify-center bg-muted text-muted-foreground"
                 >
-                  <svg
-                    class='h-5 w-5'
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='24'
-                    height='24'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    stroke-width='2'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    class='lucide lucide-chevron-left'
-                  ><path d='m15 18-6-6 6-6' /></svg>
-                </button>
-              </a>
+                  <p>Cover Image Not Available</p>
+                </div>
+                {{/if}}
 
-              {{! Page }}
-              <p>Page
-                {{pagination.page}}
-                of
-                {{pagination.totalPages}}</p>
+                <div
+                  class="flex flex-auto flex-col justify-between gap-2 border-t p-4"
+                >
+                  <div>
+                    {{!-- Title --}}
+                    <h2 class="line-clamp-2 text-xl font-semibold">
+                      {{ this.film.title }}
+                    </h2>
 
-              {{! Next }}
-              <a
-                href='{{nextPageUrl}}'
-                {{#unless nextPageUrl}}
-                class="pointer-events-none"
-                {{/unless}}
+                    {{! Duration hh:mm:ss }}
+                    <p class="text-base text-muted-foreground">
+                      Duration:
+                      {{formatDuration this.film.duration}}
+                    </p>
+
+                    {{! Directed By }}
+                    <p class="text-base text-muted-foreground">
+                      Director:
+                      {{ this.film.director }}
+                    </p>
+
+                    {{! Release year }}
+                    <p class="text-base text-muted-foreground">
+                      Release year:
+                      {{ this.film.releaseYear }}
+                    </p>
+                  </div>
+
+                  {{!-- Genres --}}
+                  {{#if this.film.genre.length}}
+                  <ul class="flex flex-row gap-2">
+                    {{#each this.film.genre}}
+                    <li
+                      class="inline-flex items-center rounded-full border border-transparent bg-primary px-2.5 py-0.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    >
+                      {{ this }}
+                    </li>
+                    {{/each}}
+                  </ul>
+                  {{/if}}
+                </div>
+              </article>
+            </a>
+          </li>
+          {{else}}
+          {{!-- Film is delete by admin --}}
+          <li class="flex">
+            <article
+              class="flex w-[300px] flex-col overflow-hidden rounded-xl border bg-card text-card-foreground shadow-lg"
+            >
+              {{!-- Image --}}
+              <div
+                class="flex aspect-[0.7] w-full items-center justify-center bg-muted text-muted-foreground"
               >
-                <button
-                  class='inline-flex h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md border border-input bg-background text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
-                  {{#unless nextPageUrl}}
-                    disabled
-                  {{/unless}}
-                >
-                  <svg
-                    class='h-5 w-5'
-                    xmlns='http://www.w3.org/2000/svg'
-                    width='24'
-                    height='24'
-                    viewBox='0 0 24 24'
-                    fill='none'
-                    stroke='currentColor'
-                    stroke-width='2'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    class='lucide lucide-chevron-right'
-                  ><path d='m9 18 6-6-6-6' /></svg>
-                </button>
-              </a>
-            </div>
+                <p>Cover Image Not Available</p>
+              </div>
+
+              <div class="flex flex-auto flex-col border-t p-4">
+                {{!-- Title --}}
+                <h2 class="line-clamp-2 text-xl font-semibold">
+                  Movie Is Not Available
+                </h2>
+
+                {{! Duration hh:mm:ss }}
+                <p class="text-base text-muted-foreground">
+                  The movie has been deleted by administator. Please contact the
+                  administrator for more information.
+                </p>
+              </div>
+            </article>
+          </li>
           {{/if}}
+          {{/each}}
+        </ul>
+
+        {{#if pagination}}
+        <div class="flex flex-row items-center gap-4">
+          {{! Previous page }}
+          <a href="{{ previousPageUrl }}"
+            {{#unless previousPageUrl}}
+              class="pointer-events-none"
+            {{/unless}}
+          >
+            <button
+              class="inline-flex h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md border border-input bg-background text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+              {{#unless previousPageUrl}}
+                disabled
+              {{/unless}}
+            >
+              <svg
+                class="h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-chevron-left"
+              >
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+            </button>
+          </a>
+
+          {{!-- Page --}}
+          <p>
+            Page
+            {{ pagination.page }}
+            of
+            {{ pagination.totalPages }}
+          </p>
+
+          {{!-- Next --}}
+          <a 
+            href="{{ nextPageUrl }}"
+            {{#unless nextPageUrl}}
+            class="pointer-events-none"
+            {{/unless}}
+          >
+            <button
+              class="inline-flex h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md border border-input bg-background text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+              {{#unless nextPageUrl}}
+                disabled
+              {{/unless}}
+            >
+              <svg
+                class="h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="lucide lucide-chevron-right"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
+          </a>
+        </div>
+        {{/if}}
         {{else}}
-          <div class="mt-12">
-            <p class="text-center text-muted-foreground">No movies found</p>
-            <p class="text-muted-foreground text-center">
-              Please check your search query, or buy the <a href="/movies" class="text-primary hover:underline underline-offset-4">movie</a> if you have not!
-            </p>
-          </div>
+        <div class="mt-12">
+          <p class="text-center text-muted-foreground">No movies found</p>
+          <p class="text-center text-muted-foreground">
+            Please check your search query, or buy the
+            <a
+              href="/movies"
+              class="text-primary underline-offset-4 hover:underline"
+              >movie</a
+            >
+            if you have not!
+          </p>
+        </div>
         {{/if}}
       </section>
     </main>

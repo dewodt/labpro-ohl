@@ -12,6 +12,12 @@ import { PUBLIC_KEY, ROLES_KEY } from 'src/common/decorators';
 import { ResponseDto } from 'src/common/dto';
 import { Role } from 'src/users/entities/user.entity';
 
+/**
+ * JWT Auth Guard
+ *
+ * Tries its best to bind UserPayload to request.user
+ * and also checks if the user is authorized or not
+ */
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
@@ -25,9 +31,6 @@ export class JwtAuthGuard implements CanActivate {
       PUBLIC_KEY,
       [context.getHandler(), context.getClass()],
     );
-    if (isPublic) {
-      return true;
-    }
 
     // Get request
     const request = context.switchToHttp().getRequest<Request>();
@@ -43,6 +46,11 @@ export class JwtAuthGuard implements CanActivate {
     } else if (cookieToken) {
       resolvedToken = cookieToken;
     } else {
+      // No token found but public route
+      if (isPublic) {
+        return true;
+      }
+
       throw new UnauthorizedException(new ResponseDto('error', 'Unauthorized'));
     }
 
@@ -51,6 +59,10 @@ export class JwtAuthGuard implements CanActivate {
     try {
       jwtPayload = await this.jwtService.verifyAsync<JwtPayload>(resolvedToken);
     } catch (error) {
+      if (isPublic) {
+        return true;
+      }
+
       throw new UnauthorizedException(new ResponseDto('error', 'Unauthorized'));
     }
 

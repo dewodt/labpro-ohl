@@ -1,10 +1,7 @@
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards';
-import {
-  NonAuthenticatedOnlyMiddleware,
-  AuthenticatedOnlyMiddleware,
-} from './middlewares';
+import { NonAuthenticatedOnlyMiddleware } from './middlewares';
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { CustomConfigService } from 'src/config';
@@ -21,12 +18,7 @@ import { CustomConfigService } from 'src/config';
     }),
   ],
   controllers: [AuthController],
-  providers: [
-    AuthService,
-    JwtAuthGuard,
-    AuthenticatedOnlyMiddleware,
-    NonAuthenticatedOnlyMiddleware,
-  ],
+  providers: [AuthService, JwtAuthGuard, NonAuthenticatedOnlyMiddleware],
   exports: [],
 })
 export class AuthModule {}

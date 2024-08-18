@@ -83,7 +83,7 @@ class LoginFormManager {
       }
 
       alert('Login successful');
-      window.location.href = '/dashboard';
+      window.location.href = '/my-movies';
     } catch (error) {
       alert(
         'Login failed: ' +

@@ -376,6 +376,26 @@ export class FilmsService {
     }
   }
 
+  async hasPurchased(userId: string, filmId: string): Promise<boolean> {
+    // Check if user has purchased the film
+    const filmTransactionRepository =
+      this.dataSource.getRepository(FilmTransaction);
+
+    try {
+      const filmTransaction = await filmTransactionRepository.findOneBy({
+        user: { id: userId },
+        film: { id: filmId },
+      });
+
+      return !!filmTransaction;
+    } catch (error) {
+      // Unexpected error
+      throw new InternalServerErrorException(
+        ResponseDto.error('Failed to check if user has purchased the film'),
+      );
+    }
+  }
+
   /**
    * Get all films bought by a user
    *

@@ -37,6 +37,7 @@ async function bootstrap() {
   app.setBaseViewsDir(resolve('./views'));
   app.setViewEngine('hbs');
   hbs.registerHelper('formatDuration', formatDuration);
+  hbs.registerPartials(resolve('./views/partials'));
 
   // Listen to request
   await app.listen(process.env.APP_PORT || 3000);

@@ -1,0 +1,117 @@
+<header
+  class='sticky left-0 right-0 top-0 z-40 flex h-20 w-full flex-row items-center justify-between border-b border-b-border bg-background px-7 sm:justify-between sm:px-12'
+>
+  {{! Mobile Icon }}
+  <a href='/movies' class='text-xl font-bold'>
+    Labpro<span class='text-primary'>OHL</span>
+  </a>
+
+  {{! Menu Icon Button }}
+  <button
+    id='sidebar-open-button'
+    aria-label='Open Navigation Bar'
+    class='flex size-9 sm:hidden'
+  >
+    <svg
+      class='size-full'
+      xmlns='http://www.w3.org/2000/svg'
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      stroke='currentColor'
+      stroke-width='2'
+      stroke-linecap='round'
+      stroke-linejoin='round'
+      class='lucide lucide-menu'
+    ><line x1='4' x2='20' y1='12' y2='12' /><line
+        x1='4'
+        x2='20'
+        y1='6'
+        y2='6'
+      /><line x1='4' x2='20' y1='18' y2='18' /></svg>
+  </button>
+
+  {{! Sidebar }}
+  <div
+    id='sidebar-container'
+    class='fixed bottom-0 right-[-200px] top-0 z-10 flex h-full w-[200px] translate-x-0 flex-col gap-12 border-l border-l-border bg-background py-6 pl-8 pr-6 text-base duration-300 ease-in-out sm:static sm:h-auto sm:w-auto sm:translate-x-0 sm:items-center sm:border-none sm:bg-transparent sm:p-0'
+  >
+    {{! Close Button }}
+    <button
+      id='sidebar-close-button'
+      aria-label='Close Navigation Bar'
+      class='flex size-9 self-end sm:hidden'
+    >
+      <svg
+        class='size-full'
+        xmlns='http://www.w3.org/2000/svg'
+        width='24'
+        height='24'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='2'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+        class='lucide lucide-x'
+      ><path d='M18 6 6 18' /><path d='m6 6 12 12' /></svg>
+    </button>
+
+    {{! Path lists  }}
+    <nav>
+      <ul
+        class='flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-10'
+        id='navbar-links-ul'
+      >
+        <li>
+          <a
+            href='/movies'
+            class='font-medium transition-all duration-200 hover:text-primary'
+          >
+            Available Movies
+          </a>
+        </li>
+
+        {{#if isUserLoggedIn}}
+          <li>
+            <a
+              href='/my-movies'
+              class='font-medium transition-all duration-200 hover:text-primary'
+            >
+              My Movies
+            </a>
+          </li>
+        {{/if}}
+
+        {{#if isUserLoggedIn}}
+          <li>
+            <button
+              id='sign-out-button'
+              class='inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-7 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+            >
+              Sign In
+            </button>
+          </li>
+        {{else}}
+          <li>
+            <a href='/auth/login'>
+              <button
+                class='inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md bg-primary px-7 py-2 text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50'
+              >
+                Sign In
+              </button>
+            </a>
+          </li>
+        {{/if}}
+      </ul>
+    </nav>
+  </div>
+
+  {{! Side bar opaque background }}
+  <div
+    id='sidebar-blur'
+    class='inset-0 z-0 hidden h-full w-full bg-black bg-opacity-80 sm:hidden'
+  >
+  </div>
+</header>

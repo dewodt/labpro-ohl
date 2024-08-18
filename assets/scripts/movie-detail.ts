@@ -63,21 +63,24 @@ class MovieDetailManager {
     }
 
     // Buy movie
-    const response = await fetch(`/films/${this.movieId}/buy`, {
-      method: 'POST',
-    });
+    try {
+      const response = await fetch(`/films/${this.movieId}/buy`, {
+        method: 'POST',
+      });
 
-    const responseBody = await response.json();
+      const responseBody = await response.json();
 
-    this.disableBuyButton(false);
+      if (!response.ok) {
+        throw new Error(responseBody.message);
+      }
 
-    if (!response.ok) {
-      alert(responseBody.message);
-      return;
+      // Refresh page
+      window.location.reload();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Unknown error');
+    } finally {
+      this.disableBuyButton(false);
     }
-
-    // Refresh page
-    window.location.reload();
   }
 
   private disableBuyButton(disabled: boolean) {

@@ -36,9 +36,10 @@
 
         <form id="login-form" class="space-y-6">
           {{!-- Username --}}
-          <div class="space-y-2">
+          <div>
             <label
               for="username"
+              id="username-label"
               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Username
@@ -48,14 +49,19 @@
               name="username"
               type="text"
               placeholder="Enter your username"
-              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              class="mt-2.5 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
+            <p
+              id="username-message"
+              class="mt-1.5 text-sm font-medium text-destructive"
+            ></p>
           </div>
 
           {{!-- Password  --}}
-          <div class="space-y-2">
+          <div>
             <label
               for="password"
+              id="password-label"
               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Password
@@ -65,8 +71,12 @@
               name="password"
               type="password"
               placeholder="Enter your password"
-              class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              class="mt-2.5 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
+            <p
+              id="password-message"
+              class="mt-1.5 text-sm font-medium text-destructive"
+            ></p>
           </div>
 
           {{! Submit button }}

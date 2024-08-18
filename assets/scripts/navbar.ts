@@ -87,19 +87,24 @@ class NavbarManager {
     this.signOutButton.disabled = true;
 
     // Call logout API
-    const response = await fetch('/logout', {
-      method: 'GET',
-    });
+    try {
+      const response = await fetch('/logout', {
+        method: 'GET',
+      });
 
-    if (!response.ok) {
-      // Show error message
-      alert('Failed to sign out');
+      const responseBody = await response.json();
+
+      if (!response.ok) {
+        throw new Error(responseBody.message);
+      }
+
+      // Reload
+      window.location.reload();
+    } catch (error) {
+      alert(error instanceof Error ? error.message : 'Unknown error');
+    } finally {
       this.signOutButton.disabled = false;
-      return;
     }
-
-    // Redirect to login page
-    window.location.reload();
   }
 
   private onOpenSidebar() {

@@ -1,9 +1,9 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class LoginRequestDto {
-  @IsString({ message: 'Username must be a string' })
-  @IsNotEmpty({ message: 'Username is required' })
-  username: string;
+  @IsString({ message: 'Username or email must be a string' })
+  @IsNotEmpty({ message: 'Username or email is required' })
+  username: string; // Username or email but body key must use "username" so FE Admin can connect
 
   @IsString({ message: 'Password must be a string' })
   @IsNotEmpty({ message: 'Password is required' })

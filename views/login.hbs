@@ -35,24 +35,24 @@
         <h1 class="text-center text-2xl font-bold">Login</h1>
 
         <form id="login-form" class="space-y-6">
-          {{!-- Username --}}
+          {{!-- Username or email --}}
           <div>
             <label
-              for="username"
-              id="username-label"
+              for="username-or-email"
+              id="username-or-email-label"
               class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Username
+              Username or Email
             </label>
             <input
-              id="username"
-              name="username"
+              id="username-or-email"
+              name="username-or-email"
               type="text"
-              placeholder="Enter your username"
+              placeholder="Enter your username or email"
               class="mt-2.5 flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             />
             <p
-              id="username-message"
+              id="username-or-email-message"
               class="mt-1.5 text-sm font-medium text-destructive"
             ></p>
           </div>

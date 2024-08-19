@@ -1,9 +1,9 @@
 class LoginFormManager {
   private loginForm: HTMLFormElement;
 
-  private usernameField: HTMLInputElement;
-  private usernameLabel: HTMLLabelElement;
-  private usernameMessage: HTMLParagraphElement;
+  private usernameOrEmailField: HTMLInputElement;
+  private usernameOrEmailLabel: HTMLLabelElement;
+  private usernameOrEmailMessage: HTMLParagraphElement;
 
   private passwordField: HTMLInputElement;
   private passwordLabel: HTMLLabelElement;
@@ -14,14 +14,14 @@ class LoginFormManager {
   constructor() {
     this.loginForm = document.getElementById('login-form') as HTMLFormElement;
 
-    this.usernameField = document.getElementById(
-      'username',
+    this.usernameOrEmailField = document.getElementById(
+      'username-or-email',
     ) as HTMLInputElement;
-    this.usernameLabel = document.getElementById(
-      'username-label',
+    this.usernameOrEmailLabel = document.getElementById(
+      'username-or-email-label',
     ) as HTMLLabelElement;
-    this.usernameMessage = document.getElementById(
-      'username-message',
+    this.usernameOrEmailMessage = document.getElementById(
+      'username-or-email-message',
     ) as HTMLParagraphElement;
 
     this.passwordField = document.getElementById(
@@ -55,10 +55,10 @@ class LoginFormManager {
     );
 
     // Validate username on input event and on blur event
-    this.usernameField.addEventListener('input', () => {
+    this.usernameOrEmailField.addEventListener('input', () => {
       this.validateUsername();
     });
-    this.usernameField.addEventListener('blur', () => {
+    this.usernameOrEmailField.addEventListener('blur', () => {
       this.validateUsername();
     });
 
@@ -89,12 +89,12 @@ class LoginFormManager {
   }
 
   private validateUsername() {
-    if (!this.usernameField.value) {
-      this.setUsernameFieldError('Username is required');
+    if (!this.usernameOrEmailField.value) {
+      this.setUsernameOrEmailFieldError('Username is required');
 
       return false;
     } else {
-      this.setUsernameFieldError(undefined);
+      this.setUsernameOrEmailFieldError(undefined);
 
       return true;
     }
@@ -112,13 +112,13 @@ class LoginFormManager {
     }
   }
 
-  private setUsernameFieldError(error?: string) {
+  private setUsernameOrEmailFieldError(error?: string) {
     if (error) {
-      this.usernameLabel.classList.add('text-destructive');
-      this.usernameMessage.textContent = error;
+      this.usernameOrEmailLabel.classList.add('text-destructive');
+      this.usernameOrEmailMessage.textContent = error;
     } else {
-      this.usernameLabel.classList.remove('text-destructive');
-      this.usernameMessage.textContent = '';
+      this.usernameOrEmailLabel.classList.remove('text-destructive');
+      this.usernameOrEmailMessage.textContent = '';
     }
   }
 
@@ -135,7 +135,7 @@ class LoginFormManager {
   private async submitLoginForm(): Promise<void> {
     this.setFormDisabled(true);
 
-    const username = this.usernameField.value;
+    const username = this.usernameOrEmailField.value; // Spesifikasi login pakai key "username" atau gak FE Admin tdk bisa connect.
     const password = this.passwordField.value;
     const body = { username, password };
 
@@ -157,7 +157,7 @@ class LoginFormManager {
       window.location.href = '/my-movies';
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
-      this.setUsernameFieldError(message);
+      this.setUsernameOrEmailFieldError(message);
       this.setPasswordFieldError(message);
     } finally {
       this.setFormDisabled(false);
@@ -166,7 +166,7 @@ class LoginFormManager {
 
   private setFormDisabled(disabled: boolean): void {
     this.loginButton.disabled = disabled;
-    this.usernameField.disabled = disabled;
+    this.usernameOrEmailField.disabled = disabled;
     this.passwordField.disabled = disabled;
   }
 }

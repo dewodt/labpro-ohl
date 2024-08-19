@@ -1,14 +1,14 @@
 import { Film } from '../entities';
-import { FilmDetailResponseDto } from './common-film.dto';
+import { FilmDetailWithVideoResponseDto } from './common-film.dto';
 import { User } from 'src/users/entities';
 
 export class BuyFilmResponseDto {
   balanceLeft: number;
-  film: FilmDetailResponseDto;
+  film: FilmDetailWithVideoResponseDto;
 
-  constructor(balanceLeft: number, film: FilmDetailResponseDto) {
+  constructor(balanceLeft: number, film: Film) {
     this.balanceLeft = balanceLeft;
-    this.film = film;
+    this.film = FilmDetailWithVideoResponseDto.fromFilm(film);
   }
 
   /**
@@ -17,9 +17,6 @@ export class BuyFilmResponseDto {
    * @param film The film bought
    */
   static fromUserAndFilm(user: User, film: Film): BuyFilmResponseDto {
-    return new BuyFilmResponseDto(
-      user.balance,
-      FilmDetailResponseDto.fromFilm(film),
-    );
+    return new BuyFilmResponseDto(user.balance, film);
   }
 }

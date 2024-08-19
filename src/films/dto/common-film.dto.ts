@@ -1,5 +1,8 @@
 import { Film } from '../entities/film.entity';
 
+/**
+ * Film overview data (without video URL and description)
+ */
 export class FilmOverviewResponseDto {
   id: string;
   title: string;
@@ -12,28 +15,17 @@ export class FilmOverviewResponseDto {
   created_at: Date;
   updated_at: Date;
 
-  constructor(
-    id: string,
-    title: string,
-    director: string,
-    release_year: number,
-    genre: string[],
-    price: number,
-    duration: number,
-    cover_image_url: string | null,
-    created_at: Date,
-    updated_at: Date,
-  ) {
-    this.id = id;
-    this.title = title;
-    this.director = director;
-    this.release_year = release_year;
-    this.genre = genre;
-    this.price = price;
-    this.duration = duration;
-    this.cover_image_url = cover_image_url;
-    this.created_at = created_at;
-    this.updated_at = updated_at;
+  constructor(film: Film) {
+    this.id = film.id;
+    this.title = film.title;
+    this.director = film.director;
+    this.release_year = film.releaseYear;
+    this.genre = film.genre || [];
+    this.price = film.price;
+    this.duration = film.duration;
+    this.cover_image_url = film.coverImageUrl;
+    this.created_at = film.createdAt;
+    this.updated_at = film.updatedAt;
   }
 
   /**
@@ -41,18 +33,7 @@ export class FilmOverviewResponseDto {
    * @param film The Film entity to convert
    */
   static fromFilm(film: Film): FilmOverviewResponseDto {
-    return new FilmOverviewResponseDto(
-      film.id,
-      film.title,
-      film.director,
-      film.releaseYear,
-      film.genre,
-      film.price,
-      film.duration,
-      film.coverImageUrl,
-      film.createdAt,
-      film.updatedAt,
-    );
+    return new FilmOverviewResponseDto(film);
   }
 
   /**
@@ -64,66 +45,60 @@ export class FilmOverviewResponseDto {
   }
 }
 
-export class FilmDetailResponseDto extends FilmOverviewResponseDto {
+/**
+ * Film detail but with hidden video URL
+ * (for non authenticated users and non admin users who havent bought the film)
+ */
+export class FilmDetailHiddenVideoResponse extends FilmOverviewResponseDto {
   description: string;
-  video_url: string;
 
-  constructor(
-    id: string,
-    title: string,
-    director: string,
-    release_year: number,
-    genre: string[],
-    price: number,
-    duration: number,
-    cover_image_url: string | null,
-    created_at: Date,
-    updated_at: Date,
-    description: string,
-    video_url: string,
-  ) {
-    super(
-      id,
-      title,
-      director,
-      release_year,
-      genre,
-      price,
-      duration,
-      cover_image_url,
-      created_at,
-      updated_at,
-    );
-    this.description = description;
-    this.video_url = video_url;
+  constructor(film: Film) {
+    super(film);
+    this.description = film.description;
   }
 
   /**
    * Convert a Film entity to a FilmDetailResponseDto
    * @param film The Film entity to convert
    */
-  static fromFilm(film: Film): FilmDetailResponseDto {
-    return new FilmDetailResponseDto(
-      film.id,
-      film.title,
-      film.director,
-      film.releaseYear,
-      film.genre,
-      film.price,
-      film.duration,
-      film.coverImageUrl,
-      film.createdAt,
-      film.updatedAt,
-      film.description,
-      film.videoUrl,
-    );
+  static fromFilm(film: Film): FilmDetailHiddenVideoResponse {
+    return new FilmDetailHiddenVideoResponse(film);
   }
 
   /**
    * Convert an array of Film entities to an array of FilmDetailResponseDto
    * @param films The array of Film entities to convert
    */
-  static fromFilms(films: Film[]): FilmDetailResponseDto[] {
-    return films.map((film) => FilmDetailResponseDto.fromFilm(film));
+  static fromFilms(films: Film[]): FilmDetailHiddenVideoResponse[] {
+    return films.map((film) => FilmDetailHiddenVideoResponse.fromFilm(film));
+  }
+}
+
+/**
+ * Film detail data (with video URL and description)
+ * For admin users or users who have bought the film
+ */
+export class FilmDetailWithVideoResponseDto extends FilmDetailHiddenVideoResponse {
+  video_url: string;
+
+  constructor(film: Film) {
+    super(film);
+    this.video_url = film.videoUrl;
+  }
+
+  /**
+   * Convert a Film entity to a FilmDetailResponseDto
+   * @param film The Film entity to convert
+   */
+  static fromFilm(film: Film): FilmDetailWithVideoResponseDto {
+    return new FilmDetailWithVideoResponseDto(film);
+  }
+
+  /**
+   * Convert an array of Film entities to an array of FilmDetailResponseDto
+   * @param films The array of Film entities to convert
+   */
+  static fromFilms(films: Film[]): FilmDetailWithVideoResponseDto[] {
+    return films.map((film) => FilmDetailWithVideoResponseDto.fromFilm(film));
   }
 }

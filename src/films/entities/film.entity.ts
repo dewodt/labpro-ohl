@@ -24,8 +24,8 @@ export class Film {
   @Column({ name: 'release_year' })
   releaseYear: number;
 
-  @Column('simple-array') // Must validate value doesnt contain comma
-  genre: string[];
+  @Column({ type: 'simple-array', nullable: true })
+  genre: string[] | null;
 
   @Column()
   price: number;

@@ -9,11 +9,11 @@ export class CommonUserResponseDto {
   email: string;
   balance: number;
 
-  constructor(id: string, username: string, email: string, balance: number) {
-    this.id = id;
-    this.username = username;
-    this.email = email;
-    this.balance = balance;
+  constructor(user: User) {
+    this.id = user.id;
+    this.username = user.username;
+    this.email = user.email;
+    this.balance = user.balance;
   }
 
   /**
@@ -21,12 +21,7 @@ export class CommonUserResponseDto {
    * @param user The User entity to convert
    */
   static fromUser(user: User): CommonUserResponseDto {
-    return new CommonUserResponseDto(
-      user.id,
-      user.username,
-      user.email,
-      user.balance,
-    );
+    return new CommonUserResponseDto(user);
   }
 
   /**

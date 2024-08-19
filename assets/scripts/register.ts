@@ -314,10 +314,18 @@ class RegisterFormManager {
         // email field error
         this.setEmailFieldError(error.message);
       } else {
-        this.setUsernameFieldError(error.message);
-        this.setEmailFieldError(error.message);
-        this.setNameFieldError(error.message);
-        this.setPasswordFieldError(error.message);
+        this.setUsernameFieldError(
+          error instanceof Error ? error.message : 'Unknown error',
+        );
+        this.setEmailFieldError(
+          error instanceof Error ? error.message : 'Unknown error',
+        );
+        this.setNameFieldError(
+          error instanceof Error ? error.message : 'Unknown error',
+        );
+        this.setPasswordFieldError(
+          error instanceof Error ? error.message : 'Unknown error',
+        );
       }
     } finally {
       this.setFormDisabled(false);

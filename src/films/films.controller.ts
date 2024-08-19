@@ -1,4 +1,8 @@
-import { FilmDetailResponseDto, FilmOverviewResponseDto } from './dto';
+import {
+  FilmDetailHiddenVideoResponse,
+  FilmDetailWithVideoResponseDto,
+  FilmOverviewResponseDto,
+} from './dto';
 import { BuyFilmResponseDto } from './dto/buy-film-dto';
 import { CreateFilmRequestDto } from './dto/create-film.dto';
 import { UpdateFilmRequestDto } from './dto/update-film.dto';
@@ -19,7 +23,7 @@ import {
 import { FormDataRequest } from 'nestjs-form-data';
 import { UserPayload } from 'src/auth/auth.interface';
 import { JwtAuthGuard } from 'src/auth/guards';
-import { ReqUser, Roles } from 'src/common/decorators';
+import { Public, ReqUser, Roles } from 'src/common/decorators';
 import { ResponseDto } from 'src/common/dto';
 import { Role } from 'src/users/entities';
 
@@ -36,12 +40,13 @@ export class FilmsController {
     const newFilm = await this.filmsService.create(body);
 
     // Map to response
-    const responseData = FilmDetailResponseDto.fromFilm(newFilm);
+    const responseData = FilmDetailWithVideoResponseDto.fromFilm(newFilm);
 
     return ResponseDto.success('Film created successfully', responseData);
   }
 
   @Get()
+  @Public()
   @HttpCode(200)
   async findAll(@Query('q') query: string | undefined) {
     // API Contract in the specification doesnt use pagination (only search query)
@@ -53,31 +58,45 @@ export class FilmsController {
     return ResponseDto.success('Films retrieved successfully"', responseData);
   }
 
-  // Not FE Admin Requirement
-  // @Get('purchases')
-  // @HttpCode(200)
-  // async getPurchases(@ReqUser() user: UserPayload) {
-  //   const { filmTransactions } = await this.filmsService.getPurchases(user.id);
-
-  //   // Map to response
-  //   const responseData =
-  //     FilmPurchasesResponseDto.fromFilmTransactions(filmTransactions);
-
-  //   return ResponseDto.success(
-  //     'Purchased films retrieved successfully',
-  //     responseData,
-  //   );
-  // }
-
   @Get(':id')
+  @Public()
   @HttpCode(200)
-  async findOne(@Param('id', ParseUUIDPipe) id: string) {
+  async findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @ReqUser() reqUser: UserPayload | undefined,
+  ) {
     const film = await this.filmsService.findOne(id);
 
-    // Map to response
-    const responseData = FilmDetailResponseDto.fromFilm(film);
+    // NOTE: HIDE vide_url if user is not admin and film is not bought
+    // Because why need to buy the movie if the video_url is accessible publicly through API
 
-    return ResponseDto.success('Film retrieved successfully', responseData);
+    // Map to response
+    if (!reqUser) {
+      // Hidden video
+      const responseData = FilmDetailHiddenVideoResponse.fromFilm(film);
+
+      return ResponseDto.success('Film retrieved successfully', responseData);
+    } else if (reqUser.role === Role.ADMIN) {
+      // With video
+      const responseData = FilmDetailWithVideoResponseDto.fromFilm(film);
+
+      return ResponseDto.success('Film retrieved successfully', responseData);
+    } else {
+      // Check if user has bought the film
+      const hasPurchased = await this.filmsService.hasPurchased(id, reqUser.id);
+
+      if (!hasPurchased) {
+        // Hidden video
+        const responseData = FilmDetailHiddenVideoResponse.fromFilm(film);
+
+        return ResponseDto.success('Film retrieved successfully', responseData);
+      }
+
+      // With video
+      const responseData = FilmDetailWithVideoResponseDto.fromFilm(film);
+
+      return ResponseDto.success('Film retrieved successfully', responseData);
+    }
   }
 
   @Put(':id')
@@ -92,7 +111,7 @@ export class FilmsController {
     const updatedFilm = await this.filmsService.update(id, body);
 
     // Map to response
-    const responseData = FilmDetailResponseDto.fromFilm(updatedFilm);
+    const responseData = FilmDetailWithVideoResponseDto.fromFilm(updatedFilm);
 
     return ResponseDto.success('Film updated successfully', responseData);
   }
@@ -104,7 +123,7 @@ export class FilmsController {
     const removedFilm = await this.filmsService.remove(id);
 
     // Map to response
-    const responseData = FilmDetailResponseDto.fromFilm(removedFilm);
+    const responseData = FilmDetailWithVideoResponseDto.fromFilm(removedFilm);
 
     return ResponseDto.success('Film deleted successfully', responseData);
   }

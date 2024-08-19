@@ -14,15 +14,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { ReqUser } from 'src/common/decorators';
+import { Public, ReqUser } from 'src/common/decorators';
 import { BearerToken } from 'src/common/decorators/bearer-token.decorator';
 import { ResponseDto } from 'src/common/dto/response.dto';
 
 @Controller()
+@UseGuards(JwtAuthGuard)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @Public()
   @HttpCode(200)
   async login(
     @Body() body: LoginRequestDto,
@@ -49,6 +51,7 @@ export class AuthController {
   }
 
   @Get('logout')
+  @Public()
   @HttpCode(200)
   async logout(@Res({ passthrough: true }) respose: Response) {
     // Clear cookie
@@ -58,6 +61,7 @@ export class AuthController {
   }
 
   @Post('register')
+  @Public()
   @HttpCode(201)
   async register(@Body() body: RegisterRequestDto) {
     // Call register service
@@ -77,7 +81,6 @@ export class AuthController {
 
   @Get('self')
   @HttpCode(200)
-  @UseGuards(JwtAuthGuard)
   async self(@BearerToken() bearerToken: string, @ReqUser() user: UserPayload) {
     // Map response
     const responseData = new SelfResponseDto(user.username, bearerToken);

@@ -23,14 +23,12 @@ export class FilmsService {
   ) {}
 
   async create(body: CreateFilmRequestDto): Promise<Film> {
-    // Pregenerate Movie ID
-    const newFilmID = uuidv4();
-
     // Upload the video
     let videoUrl: string | undefined = undefined;
     try {
+      const newVideoID = uuidv4();
       videoUrl = await this.bucketService.upload(body.video, {
-        public_id: `videos/${newFilmID}`, // File name on Cloudinary
+        public_id: `videos/${newVideoID}`, // File name on Cloudinary
         resource_type: 'video', // The type of file to upload
       });
     } catch (error) {
@@ -43,8 +41,9 @@ export class FilmsService {
     let coverImageUrl: string | undefined = undefined;
     if (body.cover_image) {
       try {
+        const newCoverImageID = uuidv4();
         coverImageUrl = await this.bucketService.upload(body.cover_image, {
-          public_id: `cover-images/${newFilmID}`, // File name on Cloudinary
+          public_id: `cover-images/${newCoverImageID}`, // File name on Cloudinary
           resource_type: 'image', // The type of file to upload
         });
       } catch (error) {
@@ -58,7 +57,6 @@ export class FilmsService {
       // Create & save the film
       const filmRepository = this.dataSource.getRepository(Film);
       const newFilm = await filmRepository.save({
-        id: newFilmID,
         title: body.title,
         description: body.description,
         coverImageUrl: coverImageUrl,
@@ -185,12 +183,18 @@ export class FilmsService {
       throw new NotFoundException(ResponseDto.error('Film not found'));
     }
 
+    // NOTE:
+    // To ease db seeding, we will not delete previous the video and cover_image
+    // because some of the image will be reused for serveral films in the seeding
+    // (to make the seeding process faster (uploading image/video is very slow))
+
     // Handle new video upload
     let newVideoUrl: string | undefined = undefined;
     if (body.video) {
       try {
+        const newVideoID = uuidv4();
         newVideoUrl = await this.bucketService.upload(body.video, {
-          public_id: `videos/${id}`, // File name on Cloudinary, override the old one
+          public_id: `videos/${newVideoID}`, // File name on Cloudinary
           resource_type: 'video', // The type of file to upload
         });
       } catch (error) {
@@ -204,8 +208,9 @@ export class FilmsService {
     let newCoverImageUrl: string | undefined = undefined;
     if (body.cover_image) {
       try {
+        const newCoverImageID = uuidv4();
         newCoverImageUrl = await this.bucketService.upload(body.cover_image, {
-          public_id: `cover-images/${id}`, // File name on Cloudinary, override the old one
+          public_id: `cover-images/${newCoverImageID}`, // File name on Cloudinary
           resource_type: 'image', // The type of file to upload
         });
       } catch (error) {
@@ -269,9 +274,9 @@ export class FilmsService {
     }
 
     // NOTE:
-    // To ease db seeding, we will not delete the video and cover_image
+    // To ease db seeding, we will not delete previous the video and cover_image
     // because some of the image will be reused for serveral films in the seeding
-    // (to reduce storage usage +  to make the seeding process faster (uploading image/video is very slow))
+    // (to make the seeding process faster (uploading image/video is very slow))
 
     // // Ignore transactional error, proceed to delete blob data
     // // No way to rollback file upload if one of them failed

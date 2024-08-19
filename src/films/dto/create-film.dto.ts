@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsArray,
   IsInt,
@@ -37,9 +37,17 @@ export class CreateFilmRequestDto {
   @Min(1000, { message: 'Release year must be greater than 1000' })
   release_year: number;
 
+  @IsOptional()
   @IsArray({ message: 'Genre must be an array' })
   @IsString({ each: true, message: 'Genre must be an array of strings' })
-  genre: string[];
+  @Transform(({ value }) => {
+    if (!Array.isArray(value)) {
+      return [value];
+    }
+
+    return value;
+  })
+  genre: string[] | undefined;
 
   // https://github.com/nestjs/nest/issues/1331
   @Type(() => Number)

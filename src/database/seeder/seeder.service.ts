@@ -88,10 +88,14 @@ export class SeederService {
       'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813885/labpro-ohl/cover-images/cqrnx7grgub56gcaw4rj.jpg',
     ];
     for (let i = 1; i <= 30; i++) {
-      const selectedGenres = faker.helpers.arrayElements(
-        genres,
-        faker.number.int({ min: 1, max: 3 }),
-      );
+      const selectedGenreCount = faker.number.int({ min: 0, max: 3 });
+      const selectedGenres =
+        selectedGenreCount > 0
+          ? faker.helpers.arrayElements(
+              genres,
+              faker.number.int(selectedGenreCount),
+            )
+          : null;
 
       const selectedVideos = videos[(i - 1) % videos.length];
 
@@ -119,12 +123,23 @@ export class SeederService {
     // Generate film transactions
     // Generate 3-5 transaction for each user
     for (const user of generatedUsers) {
+      const selectedMovies = new Set<string>();
+
       for (let i = 1; i <= faker.number.int({ min: 3, max: 5 }); i++) {
         // 10% chance that movie is deleted (null)
         const film =
           faker.number.int({ min: 0, max: 100 }) > 10
             ? faker.helpers.arrayElement(generatedFilms)
             : null;
+
+        if (film && selectedMovies.has(film.id)) {
+          i--;
+          continue;
+        }
+
+        if (film) {
+          selectedMovies.add(film.id);
+        }
 
         const transaction = queryRunner.manager.create(FilmTransaction, {
           id: faker.string.uuid(),

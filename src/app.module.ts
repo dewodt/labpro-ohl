@@ -37,7 +37,7 @@ import { LoggerErrorInterceptor, LoggerModule } from 'nestjs-pino';
         username: configService.get('database.username'),
         password: configService.get('database.password'),
         database: configService.get('database.database'),
-        synchronize: true,
+        synchronize: false,
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
       }),
     }),

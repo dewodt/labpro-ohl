@@ -75,17 +75,17 @@ export class SeederService {
       'https://res.cloudinary.com/dvzs47hay/video/upload/v1723814019/labpro-ohl/videos/txmg0jebxmjpedwhlfdv.mp4',
     ];
     const cover_images: string[] = [
-      'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813912/labpro-ohl/cover-images/gucjcuzq4vnxplc8elzk.jpg',
-      'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813902/labpro-ohl/cover-images/q5q3h20halhpvqy9hulr.jpg',
-      'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813901/labpro-ohl/cover-images/oxxo5jfrotpamkar2vbo.jpg',
-      'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813893/labpro-ohl/cover-images/yuzuqzklmh1dcujjchrs.jpg',
-      'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813890/labpro-ohl/cover-images/c60j4ouz3vf50bt7nopw.jpg',
-      'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813888/labpro-ohl/cover-images/xthzt9bsr3kspul9n30r.jpg',
-      'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813888/labpro-ohl/cover-images/zhp3vkzm6exmoa2iqzyr.jpg',
-      'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813886/labpro-ohl/cover-images/jqu0uck7jonydpfebfu5.jpg',
-      'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813886/labpro-ohl/cover-images/xxy2wny5o285daypzxdq.jpg',
-      'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813885/labpro-ohl/cover-images/yiyrmzk51z2mfvt7avdw.jpg',
-      'https://res.cloudinary.com/dvzs47hay/image/upload/v1723813885/labpro-ohl/cover-images/cqrnx7grgub56gcaw4rj.jpg',
+      'https://res.cloudinary.com/dvzs47hay/image/upload/v1724076037/labpro-ohl/cover-images/t7dzahf4dsfidakjnzyv.jpg',
+      'https://res.cloudinary.com/dvzs47hay/image/upload/v1724076038/labpro-ohl/cover-images/oig4kltlnn7fqmqwom4p.jpg',
+      'https://res.cloudinary.com/dvzs47hay/image/upload/v1724076038/labpro-ohl/cover-images/jkyqihxjruml3itajetl.jpg',
+      'https://res.cloudinary.com/dvzs47hay/image/upload/v1724076037/labpro-ohl/cover-images/e6x3xvssghsgwmn0prpb.jpg',
+      'https://res.cloudinary.com/dvzs47hay/image/upload/v1724076037/labpro-ohl/cover-images/utegyomvdx5727hmgpam.jpg',
+      'https://res.cloudinary.com/dvzs47hay/image/upload/v1724076037/labpro-ohl/cover-images/z3zdjnmena91r2zdhiy5.jpg',
+      'https://res.cloudinary.com/dvzs47hay/image/upload/v1724076036/labpro-ohl/cover-images/kyuujhqgahwkwv4inq7d.jpg',
+      'https://res.cloudinary.com/dvzs47hay/image/upload/v1724076036/labpro-ohl/cover-images/pgbjbrlwtajyimmkbvqw.jpg',
+      'https://res.cloudinary.com/dvzs47hay/image/upload/v1724076036/labpro-ohl/cover-images/hzdjg0zsumuerjt6nsqp.jpg',
+      'https://res.cloudinary.com/dvzs47hay/image/upload/v1724076036/labpro-ohl/cover-images/igtsnzsjpi4g2hlrah4t.jpg',
+      'https://res.cloudinary.com/dvzs47hay/image/upload/v1724076036/labpro-ohl/cover-images/kjebybimega3hb92hhsy.jpg',
     ];
     for (let i = 1; i <= 30; i++) {
       const selectedGenreCount = faker.number.int({ min: 0, max: 3 });

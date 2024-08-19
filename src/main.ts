@@ -6,6 +6,7 @@ import * as hbs from 'hbs';
 import { Logger } from 'nestjs-pino';
 import { resolve } from 'path';
 import { formatDuration } from 'views/helpers';
+import { resizeConvertWebpCloudinaryImage } from 'views/helpers/resize-convert-webp-cloudinary-image.helper';
 
 async function bootstrap() {
   // Create nest app
@@ -36,7 +37,13 @@ async function bootstrap() {
   app.useStaticAssets(resolve('./public'));
   app.setBaseViewsDir(resolve('./views'));
   app.setViewEngine('hbs');
+  // Helpers
   hbs.registerHelper('formatDuration', formatDuration);
+  hbs.registerHelper(
+    'resizeConvertWebpCloudinaryImage',
+    resizeConvertWebpCloudinaryImage,
+  );
+  // Partials
   hbs.registerPartials(resolve('./views/partials'));
 
   // Listen to request

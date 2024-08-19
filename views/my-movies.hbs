@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <title>My Movies | Labpro OHL</title>
     <meta
@@ -12,9 +13,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
       rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400..700&display=swap"
+      />
+    </noscript>
 
     <script src="/scripts/navbar.js" defer></script>
 
@@ -23,6 +32,7 @@
   <body class="flex min-h-screen flex-col">
     {{!-- Navbar --}}
     {{> navbar isUserLoggedIn=isUserLoggedIn}}
+    
     <main class="flex flex-auto justify-center px-4 py-12 lg:p-16">
       <section class="flex w-full max-w-7xl flex-col items-center">
         <h1 class="text-center text-3xl font-bold">My Movies</h1>
@@ -39,6 +49,7 @@
 
           {{!-- Submit --}}
           <button
+            aria-label="Search Submit"
             id="search-submit-button"
             class="inline-flex h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md bg-primary text-sm font-medium text-primary-foreground ring-offset-background transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
           >
@@ -62,6 +73,7 @@
 
           {{!-- Reset --}}
           <button
+            aria-label="Search Reset"
             id="search-reset-button"
             class="h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md bg-destructive text-sm font-medium text-destructive-foreground ring-offset-background transition-colors hover:bg-destructive/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50
               {{#if search}}
@@ -106,7 +118,8 @@
                 {{!-- Image --}}
                 {{#if this.film.coverImageUrl}}
                 <img
-                  src="{{ this.film.coverImageUrl }}"
+                  src="{{ resizeConvertWebpCloudinaryImage this.film.coverImageUrl 300 undefined }}"
+                  alt="{{ this.film.title }} Cover Image"
                   class="aspect-[0.7] w-full object-cover object-center"
                 />
                 {{else}}
@@ -191,12 +204,15 @@
         {{#if pagination}}
         <div class="flex flex-row items-center gap-4 mt-8">
           {{! Previous page }}
-          <a href="{{ previousPageUrl }}"
+          <a
+            aria-label="Previous Page" 
+            href="{{ previousPageUrl }}"
             {{#unless previousPageUrl}}
               class="pointer-events-none"
             {{/unless}}
           >
             <button
+              aria-label="Previous Page"
               class="inline-flex h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md border border-input bg-background text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               {{#unless previousPageUrl}}
                 disabled
@@ -229,13 +245,15 @@
           </p>
 
           {{!-- Next --}}
-          <a 
+          <a
+            aria-label="Next Page" 
             href="{{ nextPageUrl }}"
             {{#unless nextPageUrl}}
             class="pointer-events-none"
             {{/unless}}
           >
             <button
+              aria-label="Next Page"
               class="inline-flex h-10 w-10 flex-none items-center justify-center whitespace-nowrap rounded-md border border-input bg-background text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
               {{#unless nextPageUrl}}
                 disabled

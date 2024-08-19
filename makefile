@@ -1,17 +1,26 @@
 init-network:
 	docker network create labpro-ohl-network
 
-run-db:
-	docker compose up --build labpro-ohl-db
+run-db-dev:
+	docker compose up --build labpro-ohl-db-dev
 
 run-app-dev:
-	docker compose up --build labpro-ohl-dev
+	docker compose up --build labpro-ohl-app-dev
+
+run-tw-dev:
+	npm run build:tailwind:dev
+
+run-client-dev:
+	npm run build:client:dev
 
 run-app-prod:
-	docker compose up --build labpro-ohl-prod
+	docker compose up --build labpro-ohl-app-prod
 
-run-seeder:
-	docker compose up --build labpro-ohl-seeder
+run-seeder-dev:
+	docker compose up --build labpro-ohl-seeder-dev
+
+run-seeder-prod:
+	docker compose up --build labpro-ohl-seeder-prod
 
 reset:
 	docker compose down -v

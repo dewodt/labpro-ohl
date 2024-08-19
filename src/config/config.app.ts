@@ -10,9 +10,9 @@ export const appConfig = (): Config => ({
   env: process.env.NODE_ENV!,
   jwtSecret: process.env.JWT_SECRET!,
   app: {
-    host: process.env.CLIENT_HOST!,
-    port: parseInt(process.env.CLIENT_PORT!, 10),
-    url: process.env.CLIENT_URL!,
+    host: process.env.APP_HOST!,
+    port: parseInt(process.env.APP_PORT!, 10),
+    url: process.env.APP_URL!,
   },
   database: {
     host: process.env.DB_HOST!,

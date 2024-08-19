@@ -1,16 +1,15 @@
 services:
-  # PostgreSQL database
-  labpro-ohl-db:
-    container_name: labpro-ohl-db
+  # PostgreSQL database (FOR Local DEVELOPMENT ONLY)
+  labpro-ohl-db-dev:
+    container_name: labpro-ohl-db-dev
     image: postgres:14
-    env_file:
-      - .env
+    env_file: .env.development
     environment:
-      - POSTGRES_DB=${DB_NAME}
-      - POSTGRES_USER=${DB_USERNAME}
-      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=labpro-ohl
+      - POSTGRES_USER=labpro-ohl
+      - POSTGRES_PASSWORD=labpro-ohl
     ports:
-      - '5434:${DB_PORT}' # Use port 5434 to avoid conflict with local PostgreSQL instance
+      - '5434:5432' # Use port 5434 to avoid conflict with local PostgreSQL instance
     volumes:
       - ./db-data:/var/lib/postgresql/data
     networks:
@@ -19,61 +18,63 @@ services:
       test:
         [
           'CMD-SHELL',
-          'pg_isready -U ${DB_USERNAME} -d ${DB_NAME} -h ${DB_HOST} -p ${DB_PORT}',
+          'pg_isready -U labpro-ohl -d labpro-ohl -h labpro-ohl-db-dev -p 5432',
         ]
       interval: 5s
       timeout: 3s
       retries: 5
 
-  # dev server
-  labpro-ohl-dev:
-    container_name: labpro-ohl-dev
+  # DEVELOPMENT server (local)
+  labpro-ohl-app-dev:
+    container_name: labpro-ohl-app-dev
     build:
       context: .
       target: development
-    env_file:
-      - .env
+    env_file: .env.development
     ports:
-      - '3000:${APP_PORT}'
+      - '3000:3000'
     volumes:
       - ./:/app
     networks:
       - labpro-ohl-network
     depends_on:
-      labpro-ohl-db:
+      labpro-ohl-db-dev:
         condition: service_healthy
     command: npm run start:dev
 
-  # prod server
-  labpro-ohl-prod:
-    container_name: labpro-ohl-prod
+  # PRODUCTION SERVER (railway db)
+  # (Local production, because railway doesnt support docker-compose)
+  labpro-ohl-app-prod:
+    container_name: labpro-ohl-app-prod
     build:
       context: .
-      target: production
-    env_file:
-      - .env
+      target: production # (production build)
+    env_file: .env.production
     ports:
-      - '3000:${APP_PORT}'
-    networks:
-      - labpro-ohl-network
-    depends_on:
-      labpro-ohl-db:
-        condition: service_healthy
+      - '3000:3000'
     command: npm run start:prod
 
-  # Seeder
-  labpro-ohl-seeder:
-    container_name: labpro-ohl-seeder
+  # DEVELOPMENT seeder (local db)
+  labpro-ohl-seeder-dev:
+    container_name: labpro-ohl-seeder-dev
     build:
       context: .
-      target: production
-    env_file:
-      - .env
+      target: production # (production build)
+    env_file: .env.development
     networks:
       - labpro-ohl-network
     depends_on:
-      labpro-ohl-db:
+      labpro-ohl-db-dev:
         condition: service_healthy
+    command: npm run seed
+
+  # PRODUCTION seeder
+  labpro-ohl-seeder-prod:
+    container_name: labpro-ohl-seeder-prod
+    build:
+      context: .
+      target: production # (production build)
+    env_file: .env.production
     command: npm run seed
 
 volumes:
@@ -83,3 +84,5 @@ networks:
   labpro-ohl-network:
     external: true # Custom network
     driver: bridge # Default bridge network
+
+# Cannot use ${env} in compose because env_file only works inside the container, not in the compose file

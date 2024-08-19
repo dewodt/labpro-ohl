@@ -8,7 +8,7 @@ import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      // envFilePath: '.env', # Automatically loads .env.development or .env.production from Docker compose
       expandVariables: true,
       isGlobal: true,
       cache: true,

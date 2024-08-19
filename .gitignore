@@ -134,3 +134,7 @@ public/styles/tailwind.css
 
 # Client Typescript Build
 public/scripts
+
+# Env
+.env.production
+.env.development

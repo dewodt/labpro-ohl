@@ -1,16 +1,10 @@
-import {
-  Controller,
-  Get,
-  Redirect,
-  Render,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Render, Res, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { UserPayload } from 'src/auth/auth.interface';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { Public, ReqUser } from 'src/common/decorators';
+import { SwaggerWebLogin, SwaggerWebRegister } from 'src/swagger/web/auth';
 
 @ApiTags('Web: Auth')
 @Controller()
@@ -18,11 +12,7 @@ import { Public, ReqUser } from 'src/common/decorators';
 export class WebAuthController {
   constructor() {}
 
-  @Get('/')
-  @Public()
-  @Redirect('/movies')
-  home() {}
-
+  @SwaggerWebLogin()
   @Get('auth/login')
   @Public()
   @Render('login')
@@ -42,6 +32,7 @@ export class WebAuthController {
     };
   }
 
+  @SwaggerWebRegister()
   @Get('auth/register')
   @Public()
   @Render('register')

@@ -4,6 +4,7 @@ import {
   Param,
   ParseUUIDPipe,
   Query,
+  Redirect,
   Render,
   Res,
   UseFilters,
@@ -21,6 +22,13 @@ import {
   ReqUser,
 } from 'src/common/decorators';
 import { FilmsService } from 'src/films/films.service';
+import {
+  SwaggerWebHome,
+  SwaggerWebMovieDetail,
+  SwaggerWebMovieDetailWatch,
+  SwaggerWebMovies,
+  SwaggerWebMyMovies,
+} from 'src/swagger/web/movies';
 import { UsersService } from 'src/users/users.service';
 
 @ApiTags('Web: Movies')
@@ -33,6 +41,14 @@ export class WebMoviesController {
   ) {}
 
   // Public
+  @SwaggerWebHome()
+  @Get('/')
+  @Public()
+  @Redirect('/movies')
+  home() {}
+
+  // Public
+  @SwaggerWebMovies()
   @Get('movies')
   @Public()
   @Render('movies')
@@ -71,6 +87,7 @@ export class WebMoviesController {
   }
 
   // Public, but with some additional business logic
+  @SwaggerWebMovieDetail()
   @Get('movies/:id')
   @Public()
   @Render('movie-detail')
@@ -99,6 +116,7 @@ export class WebMoviesController {
   }
 
   // Protected
+  @SwaggerWebMyMovies()
   @Get('my-movies')
   @UseFilters(RedirectUnauthorizedFilter)
   @Render('my-movies')
@@ -137,6 +155,7 @@ export class WebMoviesController {
   }
 
   // Protected
+  @SwaggerWebMovieDetailWatch()
   @Get('movies/:id/watch')
   @UseFilters(RedirectUnauthorizedFilter)
   @Render('movie-detail-watch')

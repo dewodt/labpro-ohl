@@ -1,11 +1,11 @@
 class MovieDetailManager {
-  private buyMovieButton: HTMLButtonElement;
-  private moviePriceSpan: HTMLSpanElement;
-  private balanceSpan: HTMLSpanElement;
+  private buyMovieButton: HTMLButtonElement | null;
+  private moviePriceSpan: HTMLSpanElement | null;
+  private balanceSpan: HTMLSpanElement | null;
 
   private movieId: string;
-  private balance: number;
-  private moviePrice: number;
+  private balance: number | null;
+  private moviePrice: number | null;
 
   constructor() {
     this.buyMovieButton = document.getElementById(
@@ -24,12 +24,20 @@ class MovieDetailManager {
     this.movieId = movieId;
 
     // Get balance
-    const balance = this.balanceSpan.textContent!;
-    this.balance = parseInt(balance, 10);
+    if (this.balanceSpan && this.balanceSpan.textContent) {
+      const balance = this.balanceSpan.textContent;
+      this.balance = parseInt(balance, 10);
+    } else {
+      this.balance = null;
+    }
 
     // Get movie price
-    const moviePrice = this.moviePriceSpan.textContent!;
-    this.moviePrice = parseInt(moviePrice, 10);
+    if (this.moviePriceSpan && this.moviePriceSpan.textContent) {
+      const moviePrice = this.moviePriceSpan.textContent;
+      this.moviePrice = parseInt(moviePrice, 10);
+    } else {
+      this.moviePrice = null;
+    }
 
     this.init();
   }
@@ -44,16 +52,24 @@ class MovieDetailManager {
   // Setup listeners
   private setupEventListeners() {
     // Buy button
-    this.buyMovieButton.addEventListener('click', (e) => {
-      e.preventDefault();
-      this.handleBuyMovie();
-    });
+    if ((this, this.buyMovieButton)) {
+      this.buyMovieButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.handleBuyMovie();
+      });
+    }
   }
 
   // Buy movie
   private async handleBuyMovie() {
     // Disable buy button
     this.disableBuyButton(true);
+
+    if (!this.moviePrice || !this.balance) {
+      alert('Invalid movie price or balance.');
+      this.disableBuyButton(false);
+      return;
+    }
 
     // Check if user has enough balance
     if (this.balance < this.moviePrice) {
@@ -84,6 +100,7 @@ class MovieDetailManager {
   }
 
   private disableBuyButton(disabled: boolean) {
+    if (!this.buyMovieButton) return;
     this.buyMovieButton.disabled = disabled;
   }
 }

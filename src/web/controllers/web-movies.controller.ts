@@ -176,7 +176,7 @@ export class WebMoviesController {
     const film = await this.filmService.findOne(id);
 
     // Return data to handlebar for SSR
-    return { film };
+    return { film, isUserLoggedIn: true };
   }
 
   private buildSearchPaginationUrl(

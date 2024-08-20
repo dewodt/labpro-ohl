@@ -1,5 +1,5 @@
 services:
-  # PostgreSQL database (FOR Local DEVELOPMENT ONLY)
+  # PostgreSQL Database (FOR Local DEVELOPMENT ONLY)
   labpro-ohl-db-dev:
     container_name: labpro-ohl-db-dev
     image: postgres:14
@@ -24,7 +24,7 @@ services:
       timeout: 3s
       retries: 5
 
-  # DEVELOPMENT server (local)
+  # DEVELOPMENT SERVER (uses local db)
   labpro-ohl-app-dev:
     container_name: labpro-ohl-app-dev
     build:
@@ -42,19 +42,20 @@ services:
         condition: service_healthy
     command: npm run start:dev
 
-  # PRODUCTION SERVER (railway db)
-  # (Local production, because railway doesnt support docker-compose)
+  # PRODUCTION SERVER (uses local db)
   labpro-ohl-app-prod:
     container_name: labpro-ohl-app-prod
     build:
       context: .
       target: production # (production build)
     env_file: .env.production
+    networks:
+      - labpro-ohl-network
     ports:
       - '3000:3000'
     command: npm run start:prod
 
-  # DEVELOPMENT seeder (local db)
+  # DEVELOPMENT seeder (uses local db)
   labpro-ohl-seeder-dev:
     container_name: labpro-ohl-seeder-dev
     build:
@@ -68,14 +69,15 @@ services:
         condition: service_healthy
     command: npm run seed
 
-  # PRODUCTION seeder
-  labpro-ohl-seeder-prod:
-    container_name: labpro-ohl-seeder-prod
-    build:
-      context: .
-      target: production # (production build)
-    env_file: .env.production
-    command: npm run seed
+  # Uncomment
+  # # PRODUCTION db seeder (uses railway's db)
+  # labpro-ohl-seeder-prod:
+  #   container_name: labpro-ohl-seeder-prod
+  #   build:
+  #     context: .
+  #     target: production # (production build)
+  #   env_file: .env.seed.production
+  #   command: npm run seed
 
 volumes:
   db-data:

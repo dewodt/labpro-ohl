@@ -34,9 +34,15 @@ Selection Assignment 3 Programming Laboratory Assistants 2024 ITB.
 
 ### Docker
 
-1.  Copy `.env.example` file then paste and rename it into `.env` in the root project.
+1.  Copy `.env.example` file then paste and rename it into `.env.development` and `.env.production` in the root project (also change NODE_ENV into the correct enviroment).
 
-2.  Create a docker network
+2.  Install dependencies (`tailwind --watch` or `make run-tw-dev` is not containerized)
+
+    ```bash
+    npm install
+    ```
+
+3.  Create a docker network
 
     ```bash
     make init-network
@@ -48,7 +54,7 @@ Selection Assignment 3 Programming Laboratory Assistants 2024 ITB.
     docker network create labpro-ohl-network
     ```
 
-3.  Run the local docker PostgreSQL database
+4.  Run the local docker PostgreSQL database
 
     ```bash
     run-db-dev:
@@ -60,7 +66,7 @@ Selection Assignment 3 Programming Laboratory Assistants 2024 ITB.
     docker compose up --build labpro-ohl-db-dev
     ```
 
-4.  Seed the local database
+5.  Seed the local database
 
     ```bash
     make run-seeder-dev
@@ -72,7 +78,7 @@ Selection Assignment 3 Programming Laboratory Assistants 2024 ITB.
     docker compose up --build labpro-ohl-seeder-dev
     ```
 
-5.  Run the app
+6.  Run the app
 
     a. For Production (Recommended for Demo)
 
@@ -122,7 +128,7 @@ Selection Assignment 3 Programming Laboratory Assistants 2024 ITB.
     npm run build:client:dev
     ```
 
-6.  To reset the docker and the database,
+7.  To reset the docker and the database,
 
     ```bash
     make reset
@@ -136,7 +142,7 @@ Selection Assignment 3 Programming Laboratory Assistants 2024 ITB.
     sudo rm -rf ./dist
     ```
 
-7.  To stop the container,
+8.  To stop the container,
 
     ```bash
     make stop

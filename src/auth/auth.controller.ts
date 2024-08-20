@@ -13,16 +13,25 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { Public, ReqUser } from 'src/common/decorators';
 import { BearerToken } from 'src/common/decorators/bearer-token.decorator';
 import { ResponseDto } from 'src/common/dto/response.dto';
+import {
+  SwaggerSelf,
+  SwaggerLogin,
+  SwaggerLogout,
+  SwaggerRegister,
+} from 'src/swagger/auth';
 
+@ApiTags('API: Auth')
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @SwaggerLogin()
   @Post('login')
   @Public()
   @HttpCode(200)
@@ -50,6 +59,7 @@ export class AuthController {
     return new ResponseDto('success', 'Login success', responseData);
   }
 
+  @SwaggerLogout()
   @Get('logout')
   @Public()
   @HttpCode(200)
@@ -60,6 +70,7 @@ export class AuthController {
     return new ResponseDto('success', 'Logout success');
   }
 
+  @SwaggerRegister()
   @Post('register')
   @Public()
   @HttpCode(201)
@@ -79,6 +90,7 @@ export class AuthController {
     return new ResponseDto('success', 'Register success', responseData);
   }
 
+  @SwaggerSelf()
   @Get('self')
   @HttpCode(200)
   async self(@BearerToken() bearerToken: string, @ReqUser() user: UserPayload) {

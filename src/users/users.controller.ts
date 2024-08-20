@@ -13,16 +13,25 @@ import {
   ParseUUIDPipe,
   Delete,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { Roles } from 'src/common/decorators';
 import { ResponseDto } from 'src/common/dto';
+import {
+  SwaggerDeleteUser,
+  SwaggerGetManyUser,
+  SwaggerGetOneUser,
+  SwaggerIncrementUserBalance,
+} from 'src/swagger/users';
 
+@ApiTags('API: Users')
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 @Roles(Role.ADMIN)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @SwaggerGetManyUser()
   @Get()
   @HttpCode(200)
   async findAll(@Query('q') query: string | undefined) {
@@ -38,6 +47,7 @@ export class UsersController {
     );
   }
 
+  @SwaggerGetOneUser()
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id', ParseUUIDPipe) id: string) {
@@ -53,6 +63,7 @@ export class UsersController {
     );
   }
 
+  @SwaggerIncrementUserBalance()
   @Post(':id/balance')
   @HttpCode(201)
   async incrementBalance(
@@ -70,6 +81,7 @@ export class UsersController {
     );
   }
 
+  @SwaggerDeleteUser()
   @Delete(':id')
   @HttpCode(200)
   async remove(@Param('id', ParseUUIDPipe) id: string) {

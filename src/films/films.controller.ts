@@ -20,18 +20,29 @@ import {
   ParseUUIDPipe,
   Put,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { FormDataRequest } from 'nestjs-form-data';
 import { UserPayload } from 'src/auth/auth.interface';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { Public, ReqUser, Roles } from 'src/common/decorators';
 import { ResponseDto } from 'src/common/dto';
+import {
+  SwaggerBuyFilm,
+  SwaggerCreateFilm,
+  SwaggerDeleteFilm,
+  SwaggerGetManyFilm,
+  SwaggerGetOneFilm,
+  SwaggerUpdateFilm,
+} from 'src/swagger/films';
 import { Role } from 'src/users/entities';
 
+@ApiTags('API: Films')
 @Controller('films')
 @UseGuards(JwtAuthGuard)
 export class FilmsController {
   constructor(private readonly filmsService: FilmsService) {}
 
+  @SwaggerCreateFilm()
   @Post()
   @Roles(Role.ADMIN)
   @FormDataRequest()
@@ -45,6 +56,7 @@ export class FilmsController {
     return ResponseDto.success('Film created successfully', responseData);
   }
 
+  @SwaggerGetManyFilm()
   @Get()
   @Public()
   @HttpCode(200)
@@ -58,6 +70,7 @@ export class FilmsController {
     return ResponseDto.success('Films retrieved successfully"', responseData);
   }
 
+  @SwaggerGetOneFilm()
   @Get(':id')
   @Public()
   @HttpCode(200)
@@ -99,6 +112,7 @@ export class FilmsController {
     }
   }
 
+  @SwaggerUpdateFilm()
   @Put(':id')
   @Roles(Role.ADMIN)
   @FormDataRequest()
@@ -116,6 +130,7 @@ export class FilmsController {
     return ResponseDto.success('Film updated successfully', responseData);
   }
 
+  @SwaggerDeleteFilm()
   @Delete(':id')
   @Roles(Role.ADMIN)
   @HttpCode(200)
@@ -129,6 +144,7 @@ export class FilmsController {
   }
 
   // Not FE Admin Requirement
+  @SwaggerBuyFilm()
   @Post(':id/buy')
   @HttpCode(200)
   async buy(

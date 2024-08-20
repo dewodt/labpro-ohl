@@ -2,6 +2,7 @@ import { JwtPayload, UserPayload } from '../auth.interface';
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -51,7 +52,7 @@ export class JwtAuthGuard implements CanActivate {
         return true;
       }
 
-      throw new UnauthorizedException(new ResponseDto('error', 'Unauthorized'));
+      throw new UnauthorizedException(ResponseDto.error('Unauthorized'));
     }
 
     // Check if token is valid
@@ -63,7 +64,7 @@ export class JwtAuthGuard implements CanActivate {
         return true;
       }
 
-      throw new UnauthorizedException(new ResponseDto('error', 'Unauthorized'));
+      throw new UnauthorizedException(ResponseDto.error('Unauthorized'));
     }
 
     // Check allowed roles from handler + class
@@ -74,8 +75,8 @@ export class JwtAuthGuard implements CanActivate {
 
     // If decorator is set, check if user role is allowed
     if (allowedRoles && !allowedRoles.includes(jwtPayload.role)) {
-      throw new UnauthorizedException(
-        new ResponseDto('error', 'Unauthorized: Insufficient role access'),
+      throw new ForbiddenException(
+        ResponseDto.error('Unauthorized: Insufficient role access'),
       );
     }
 

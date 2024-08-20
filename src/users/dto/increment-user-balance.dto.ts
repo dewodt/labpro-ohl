@@ -5,4 +5,8 @@ export class IncrementUserBalanceRequestDto {
   @IsInt({ message: 'Increment must be an integer' })
   @IsPositive({ message: 'Increment must be greater than 0' })
   increment: number;
+
+  constructor(increment: number) {
+    this.increment = increment;
+  }
 }

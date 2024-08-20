@@ -40,6 +40,13 @@ export class RegisterRequestDto {
     message: 'Password must contain a special character',
   })
   password: string;
+
+  constructor(email: string, username: string, name: string, password: string) {
+    this.email = email;
+    this.username = username;
+    this.name = name;
+    this.password = password;
+  }
 }
 
 export class RegisterResponseDto {

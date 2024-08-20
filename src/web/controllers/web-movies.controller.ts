@@ -9,6 +9,7 @@ import {
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { UserPayload } from 'src/auth/auth.interface';
 import { RedirectUnauthorizedFilter } from 'src/auth/filters';
@@ -22,6 +23,7 @@ import {
 import { FilmsService } from 'src/films/films.service';
 import { UsersService } from 'src/users/users.service';
 
+@ApiTags('Web: Movies')
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class WebMoviesController {

@@ -1,6 +1,8 @@
 import { AppModule } from './app.module';
+import { swaggerConfig } from './swagger/config.swagger';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import { SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import * as hbs from 'hbs';
 import { Logger } from 'nestjs-pino';
@@ -45,6 +47,10 @@ async function bootstrap() {
   );
   // Partials
   hbs.registerPartials(resolve('./views/partials'));
+
+  // Swagger Setup
+  const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('docs', app, swaggerDocument);
 
   // Listen to request
   await app.listen(process.env.APP_PORT || 3000);

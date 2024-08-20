@@ -6,11 +6,13 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { UserPayload } from 'src/auth/auth.interface';
 import { JwtAuthGuard } from 'src/auth/guards';
 import { Public, ReqUser } from 'src/common/decorators';
 
+@ApiTags('Web: Auth')
 @Controller()
 @UseGuards(JwtAuthGuard)
 export class WebAuthController {
